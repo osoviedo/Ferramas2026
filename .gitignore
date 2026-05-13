@@ -1,7 +1,5 @@
 # Sensitive files
-cookies.txt
-cookies2.txt
-cookies3.txt
+cookies*.txt
 .env
 
 # Database

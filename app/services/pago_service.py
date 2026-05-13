@@ -38,7 +38,6 @@ class PagoService:
                 'failure': url_for('tienda.pago_error', pedido_id=pedido.id, _external=True),
                 'pending': url_for('tienda.pago_error', pedido_id=pedido.id, _external=True),
             },
-            'auto_return': 'approved',
         }
         try:
             preference_response = sdk.preference().create(preference_data)
