@@ -22,7 +22,7 @@ class PagoService:
         if PagoService._es_modo_simulado():
             return PagoService._preferencia_simulada(pedido)
 
-        sdk = mercadopago.SDK(access_token)
+        sdk = mercadopago.SDK(current_app.config.get('MP_ACCESS_TOKEN'))
         items = []
         for pp in pedido.productos:
             items.append({
