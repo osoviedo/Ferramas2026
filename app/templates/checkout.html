@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+    <h1>Checkout</h1>
+    <p>Finaliza tu compra</p>
+</section>
+
+<div style="max-width:700px; margin:0 auto; padding: 0 32px 40px;">
+
+    {% if exito %}
+    <div style="text-align:center; padding:40px; background:rgba(29,158,117,0.15); border:0.5px solid rgba(29,158,117,0.3); border-radius:14px;">
+        <i class="ti ti-circle-check" style="font-size:56px; color:#1d9e75;"></i>
+        <h2 class="text-white mt-3">¡Pago exitoso!</h2>
+        <p style="color:rgba(255,255,255,0.6);">Tu pedido #{{ pedido_id }} ha sido confirmado.</p>
+        <a href="{{ url_for('tienda.index') }}" class="btn" style="background:#e8601a; color:#fff; border-radius:8px; margin-top:12px;">
+            <i class="ti ti-home"></i> Volver al inicio
+        </a>
+    </div>
+    <script>localStorage.removeItem("carrito");</script>
+    {% elif error_pago %}
+    <div style="text-align:center; padding:40px; background:rgba(226,75,74,0.15); border:0.5px solid rgba(226,75,74,0.3); border-radius:14px;">
+        <i class="ti ti-alert-circle" style="font-size:56px; color:#e24b4a;"></i>
+        <h2 class="text-white mt-3">Error en el pago</h2>
+        <p style="color:rgba(255,255,255,0.6);">Hubo un problema al procesar tu pago. Intenta nuevamente.</p>
+        <a href="{{ url_for('carrito.ver_carrito') }}" class="btn" style="background:#e8601a; color:#fff; border-radius:8px; margin-top:12px;">
+            <i class="ti ti-arrow-left"></i> Volver al carrito
+        </a>
+    </div>
+    {% else %}
+    <form method="POST" action="{{ url_for('carrito.procesar_checkout') }}"
+          style="background:rgba(255,255,255,0.07); border:0.5px solid rgba(255,255,255,0.15); border-radius:14px; padding:32px; backdrop-filter:blur(10px);">
+
+        <h4 class="text-white mb-3"><i class="ti ti-truck"></i> Método de entrega</h4>
+
+        <div class="mb-3">
+            <div class="form-check" style="background:rgba(255,255,255,0.05); border-radius:8px; padding:12px 16px; margin-bottom:8px;">
+                <input class="form-check-input" type="radio" name="modo_entrega" id="retiro" value="retiro" checked
+                       onchange="toggleEntrega()">
+                <label class="form-check-label text-white" for="retiro">
+                    <strong>Retiro en sucursal</strong>
+                    <br><small style="color:rgba(255,255,255,0.5);">Sucursal Central — Av. Principal 1234</small>
+                </label>
+            </div>
+            <div class="form-check" style="background:rgba(255,255,255,0.05); border-radius:8px; padding:12px 16px;">
+                <input class="form-check-input" type="radio" name="modo_entrega" id="despacho" value="despacho"
+                       onchange="toggleEntrega()">
+                <label class="form-check-label text-white" for="despacho">
+                    <strong>Despacho a domicilio</strong>
+                    <br><small style="color:rgba(255,255,255,0.5);">Recibe en tu dirección</small>
+                </label>
+            </div>
+        </div>
+
+        <div id="seccion-direccion" style="display:none;">
+            <h4 class="text-white mb-3"><i class="ti ti-map-pin"></i> Dirección de despacho</h4>
+            <div class="mb-3">
+                <input type="text" class="form-control" name="direccion" placeholder="Dirección"
+                       style="background:rgba(255,255,255,0.08); border:0.5px solid rgba(255,255,255,0.2); color:#fff; border-radius:8px; padding:10px 14px;">
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" name="comuna" placeholder="Comuna"
+                           style="background:rgba(255,255,255,0.08); border:0.5px solid rgba(255,255,255,0.2); color:#fff; border-radius:8px; padding:10px 14px;">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" name="region" placeholder="Región"
+                           style="background:rgba(255,255,255,0.08); border:0.5px solid rgba(255,255,255,0.2); color:#fff; border-radius:8px; padding:10px 14px;">
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="sucursal" value="Sucursal Central">
+        <input type="hidden" name="items_carrito" id="items-carrito" value="">
+
+        <h4 class="text-white mb-3"><i class="ti ti-credit-card"></i> Método de pago</h4>
+
+        <div class="mb-3">
+            <div class="form-check" style="background:rgba(255,255,255,0.05); border-radius:8px; padding:12px 16px; margin-bottom:8px;">
+                <input class="form-check-input" type="radio" name="metodo_pago" id="mpago" value="mercadopago" checked
+                       onchange="toggleMetodoPago()">
+                <label class="form-check-label text-white" for="mpago">
+                    <strong><i class="ti ti-credit-card"></i> Mercado Pago</strong>
+                    <br><small style="color:rgba(255,255,255,0.5);">Paga con tarjeta de crédito, débito o cuenta Mercado Pago</small>
+                </label>
+            </div>
+            <div class="form-check" style="background:rgba(255,255,255,0.05); border-radius:8px; padding:12px 16px;">
+                <input class="form-check-input" type="radio" name="metodo_pago" id="transferencia" value="transferencia"
+                       onchange="toggleMetodoPago()">
+                <label class="form-check-label text-white" for="transferencia">
+                    <strong><i class="ti ti-building-bank"></i> Transferencia bancaria</strong>
+                    <br><small style="color:rgba(255,255,255,0.5);">Transfiere directamente a nuestra cuenta</small>
+                </label>
+            </div>
+        </div>
+
+        <div id="seccion-transferencia" style="display:none; background:rgba(55,138,221,0.1); border:0.5px solid rgba(55,138,221,0.25); border-radius:10px; padding:16px; margin-bottom:16px;">
+            <h5 class="text-white" style="font-size:14px;"><i class="ti ti-building-bank"></i> Datos para transferencia</h5>
+            <table style="color:rgba(255,255,255,0.7); font-size:13px; width:100%;">
+                <tr><td style="padding:4px 12px 4px 0; color:rgba(255,255,255,0.5);">Banco:</td><td>Banco Santander</td></tr>
+                <tr><td style="padding:4px 12px 4px 0; color:rgba(255,255,255,0.5);">Titular:</td><td>Ferremas SpA</td></tr>
+                <tr><td style="padding:4px 12px 4px 0; color:rgba(255,255,255,0.5);">RUT:</td><td>76.543.210-K</td></tr>
+                <tr><td style="padding:4px 12px 4px 0; color:rgba(255,255,255,0.5);">Cuenta:</td><td>Corriente 0123-45678-9</td></tr>
+                <tr><td style="padding:4px 12px 4px 0; color:rgba(255,255,255,0.5);">Email comprobante:</td><td>pagos@ferramas.cl</td></tr>
+            </table>
+            <p style="color:rgba(255,255,255,0.5); font-size:12px; margin:8px 0 0;">Envía el comprobante a <strong style="color:#fff;">pagos@ferramas.cl</strong> indicando tu número de pedido. Confirmaremos el pago en un plazo de 24 horas hábiles.</p>
+        </div>
+
+        <h4 class="text-white mb-3"><i class="ti ti-receipt"></i> Resumen</h4>
+        <div id="resumen-checkout" style="color:rgba(255,255,255,0.7); font-size:14px;"></div>
+
+        <div id="descuento-info" style="display:none; margin-top:8px;">
+            <span style="color:rgba(255,255,255,0.6); font-size:14px;">Descuento (<span id="descuento-porcentaje">0</span>%): </span>
+            <span style="color:#1d9e75; font-size:14px;">-$<span id="descuento-monto">0</span></span>
+        </div>
+
+        <h4 class="text-white mt-3">Total: <span id="total-checkout" style="color:#e8601a;">$0</span></h4>
+
+        {% if current_user.is_authenticated %}
+        <button type="submit" class="btn btn-lg w-100 mt-3" style="background:#e8601a; color:#fff; font-weight:500; border-radius:8px; padding:12px;">
+            <i class="ti ti-credit-card"></i> Pagar con Mercado Pago
+        </button>
+        {% else %}
+        <p class="text-center mt-3" style="color:rgba(255,255,255,0.5);">
+            <a href="{{ url_for('auth.login') }}" style="color:#e8601a;">Inicia sesión</a> para continuar con el pago.
+        </p>
+        {% endif %}
+    </form>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleEntrega() {
+    let despacho = document.getElementById("despacho").checked;
+    document.getElementById("seccion-direccion").style.display = despacho ? "block" : "none";
+}
+
+function toggleMetodoPago() {
+    let transf = document.getElementById("transferencia").checked;
+    document.getElementById("seccion-transferencia").style.display = transf ? "block" : "none";
+    let btn = document.querySelector('button[type="submit"]');
+    if (transf) {
+        btn.innerHTML = '<i class="ti ti-building-bank"></i> Confirmar pedido con transferencia';
+        btn.style.background = '#378add';
+    } else {
+        btn.innerHTML = '<i class="ti ti-credit-card"></i> Pagar con Mercado Pago';
+        btn.style.background = '#e8601a';
+    }
+}
+
+var descuentoUsuario = {{ current_user.descuento if current_user.is_authenticated else 0 }};
+
+function cargarResumen() {
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    let resumen = document.getElementById("resumen-checkout");
+    let total = 0;
+    let html = '<ul style="list-style:none; padding:0;">';
+    carrito.forEach(p => {
+        let sub = p.precio * p.cantidad;
+        total += sub;
+        html += `<li style="margin-bottom:4px;">${p.nombre} x${p.cantidad} — $${sub.toLocaleString("es-CL")}</li>`;
+    });
+    html += '</ul>';
+    resumen.innerHTML = html;
+
+    let descuentoMonto = 0;
+    if (descuentoUsuario > 0) {
+        descuentoMonto = Math.round(total * descuentoUsuario / 100);
+        document.getElementById("descuento-info").style.display = "block";
+        document.getElementById("descuento-porcentaje").textContent = descuentoUsuario;
+        document.getElementById("descuento-monto").textContent = descuentoMonto.toLocaleString("es-CL");
+        total = total - descuentoMonto;
+    }
+
+    document.getElementById("total-checkout").textContent = "$" + total.toLocaleString("es-CL");
+}
+
+// Enviar carrito como hidden field al hacer submit, para sincronizar con BD
+document.querySelector('form').addEventListener('submit', function() {
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    let itemsParaBD = carrito.map(p => ({ id: p.id, cantidad: p.cantidad }));
+    document.getElementById("items-carrito").value = JSON.stringify(itemsParaBD);
+});
+
+toggleEntrega();
+toggleMetodoPago();
+cargarResumen();
+</script>
+{% endblock %}
