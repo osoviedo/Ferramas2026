@@ -1,9 +1,9 @@
 # Sensitive files
-cookies*.txt
-.env
+# cookies*.txt  (descomentado para subir a GitHub - presentación universidad)
+# .env  (descomentado para subir a GitHub - presentación universidad)
 
 # Database
-*.db
+# *.db  (descomentado para subir a GitHub - presentación universidad)
 
 # Python
 __pycache__/

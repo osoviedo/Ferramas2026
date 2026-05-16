@@ -6,7 +6,7 @@ Sistema e-commerce completo construido con Flask, SQLAlchemy, Bootstrap 5 y Mari
 
 ```
 Ferramas2026/
-├── app/
+├── backend/
 │   ├── __init__.py          # Factory pattern, Flask-Login, SQLAlchemy
 │   ├── config.py            # Variables de entorno y configuración
 │   ├── models/
@@ -21,13 +21,14 @@ Ferramas2026/
 │   │   └── email_service.py # Placeholder de notificaciones
 │   ├── api/
 │   │   └── producto_api.py  # API REST: /api/productos, /api/categorias, etc.
-│   ├── views/
-│   │   ├── auth.py          # Login, registro, logout, perfil
-│   │   ├── tienda.py        # Index, productos, checkout
-│   │   ├── carrito.py       # Carrito CRUD, checkout → pedido
-│   │   ├── vendedor.py      # Panel vendedor: aprobar/rechazar pedidos
-│   │   ├── bodeguero.py     # Panel bodeguero: preparar/entregar pedidos
-│   │   └── admin.py         # Panel admin: gestión de usuarios, reportes
+│   └── views/
+│       ├── auth.py          # Login, registro, logout, perfil
+│       ├── tienda.py        # Index, productos, checkout
+│       ├── carrito.py       # Carrito CRUD, checkout → pedido
+│       ├── vendedor.py      # Panel vendedor: aprobar/rechazar pedidos
+│       ├── bodeguero.py     # Panel bodeguero: preparar/entregar pedidos
+│       └── admin.py         # Panel admin: gestión de usuarios, reportes
+├── frontend/
 │   ├── static/
 │   │   ├── styles.css       # Tema oscuro café #2c1a0e
 │   │   └── img/Productos/   # Imágenes de productos
