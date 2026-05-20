@@ -1,5 +1,4 @@
-# Variables de entorno (secretos)
-.env
+# Variables de entorno locales (no subir overrides personales)
 .env.local
 .env.*.local
 !.env.example
