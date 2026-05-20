@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+    <h1><i class="ti ti-truck-delivery"></i> Panel Bodeguero</h1>
+    <p>Gestión de preparación y entrega de pedidos</p>
+</section>
+
+<div style="max-width:1100px; margin:0 auto; padding: 8px 32px 40px;">
+
+    {% if pedidos %}
+    <div class="table-responsive" style="background:rgba(255,255,255,0.07); border:0.5px solid rgba(255,255,255,0.15); border-radius:14px; padding:24px;">
+        <table class="table table-dark mb-0" style="--bs-table-bg: transparent;">
+            <thead>
+                <tr><th># Pedido</th><th>Cliente</th><th>Total</th><th>Entrega</th><th>Estado</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+                {% for p in pedidos %}
+                <tr>
+                    <td class="text-white">#{{ p.id }}</td>
+                    <td class="text-white">{{ p.usuario.nombre }}</td>
+                    <td style="color:#e8601a;">${{ p.total }}</td>
+                    <td style="text-transform:capitalize; color:rgba(255,255,255,0.6);">
+                        {{ p.modo_entrega }}
+                        {% if p.modo_entrega == 'despacho' and p.direccion_despacho %}
+                        <br><small>{{ p.direccion_despacho }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% set badge_class = {'aprobado': 'info', 'preparando': 'primary', 'entregado': 'success'} %}
+                        <span class="badge bg-{{ badge_class.get(p.estado, 'secondary') }}">{{ p.estado }}</span>
+                    </td>
+                    <td>
+                        <div style="display:flex; gap:6px;">
+                            {% if p.estado == 'aprobado' %}
+                            <form method="POST" action="{{ url_for('bodeguero.preparar', pedido_id=p.id) }}" style="margin:0;">
+                                <button type="submit" class="btn btn-sm" style="background:rgba(55,138,221,0.2); color:#378add; border:none; border-radius:6px;">
+                                    <i class="ti ti-package"></i> Preparar
+                                </button>
+                            </form>
+                            {% endif %}
+                            {% if p.estado == 'preparando' %}
+                            <form method="POST" action="{{ url_for('bodeguero.entregar', pedido_id=p.id) }}" style="margin:0;">
+                                <button type="submit" class="btn btn-sm" style="background:rgba(29,158,117,0.2); color:#1d9e75; border:none; border-radius:6px;">
+                                    <i class="ti ti-truck-delivery"></i> Entregar
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align:center; padding:40px; color:rgba(255,255,255,0.5);">
+        <i class="ti ti-package-off" style="font-size:48px;"></i>
+        <p style="margin-top:12px;">No hay pedidos para procesar.</p>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,362 @@
+{
+  "info": {
+    "_postman_id": "ferramas-api-v1",
+    "name": "Ferramas API",
+    "description": "Colección de endpoints de la API REST de Ferramas — e-commerce de ferretería",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Productos",
+      "item": [
+        {
+          "name": "Listar todos los productos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/productos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "productos"]
+            },
+            "description": "Obtiene la lista completa de productos. Soporta query param `convertir_a=USD` o `convertir_a=EUR` para conversión de moneda vía mindicador.cl."
+          },
+          "response": []
+        },
+        {
+          "name": "Detalle de producto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/productos/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "productos", "1"]
+            },
+            "description": "Obtiene el detalle de un producto por su ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Productos por categoría",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/productos/categoria/herramientas-manuales",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "productos", "categoria", "herramientas-manuales"]
+            },
+            "description": "Lista productos filtrados por categoría (slug en URL)."
+          },
+          "response": []
+        },
+        {
+          "name": "Listar categorías",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/categorias",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "categorias"]
+            },
+            "description": "Lista todas las categorías únicas disponibles."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Autenticación",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/x-www-form-urlencoded"}],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {"key": "email", "value": "cliente@test.com", "type": "text"},
+                {"key": "password", "value": "123456", "type": "text"}
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["login"]
+            },
+            "description": "Inicia sesión con email y contraseña."
+          },
+          "response": []
+        },
+        {
+          "name": "Registro",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/x-www-form-urlencoded"}],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {"key": "nombre", "value": "Nuevo Cliente", "type": "text"},
+                {"key": "email", "value": "nuevo@test.com", "type": "text"},
+                {"key": "password", "value": "123456", "type": "text"},
+                {"key": "confirmar", "value": "123456", "type": "text"}
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/registro",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["registro"]
+            },
+            "description": "Crea una nueva cuenta de cliente."
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/logout",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["logout"]
+            },
+            "description": "Cierra la sesión actual."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Carrito",
+      "item": [
+        {
+          "name": "Agregar al carrito",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"producto_id\": 1, \"cantidad\": 1}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/carrito/agregar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["carrito", "agregar"]
+            },
+            "description": "Agrega un producto al carrito (API JSON)."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar del carrito",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"producto_id\": 1}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/carrito/eliminar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["carrito", "eliminar"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Checkout (crear pedido y pago)",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/x-www-form-urlencoded"}],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {"key": "modo_entrega", "value": "retiro", "type": "text"},
+                {"key": "sucursal", "value": "Sucursal Central", "type": "text"}
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/carrito/checkout",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["carrito", "checkout"]
+            },
+            "description": "Procesa el carrito, crea un pedido y redirige a Mercado Pago (requiere sesión)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Vendedor",
+      "item": [
+        {
+          "name": "Panel vendedor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/vendedor",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["vendedor"]
+            },
+            "description": "Panel de vendedor: lista pedidos pendientes de aprobación."
+          },
+          "response": []
+        },
+        {
+          "name": "Aprobar pedido",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/vendedor/aprobar/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["vendedor", "aprobar", "1"]
+            },
+            "description": "Aprueba un pedido y lo mueve a estado 'preparando'."
+          },
+          "response": []
+        },
+        {
+          "name": "Rechazar pedido",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/vendedor/rechazar/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["vendedor", "rechazar", "1"]
+            },
+            "description": "Rechaza un pedido."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bodeguero",
+      "item": [
+        {
+          "name": "Panel bodeguero",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/bodeguero",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["bodeguero"]
+            },
+            "description": "Panel de bodeguero: pedidos aprobados y en preparación."
+          },
+          "response": []
+        },
+        {
+          "name": "Marcar como preparando",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/bodeguero/preparar/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["bodeguero", "preparar", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Marcar como entregado",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/bodeguero/entregar/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["bodeguero", "entregar", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Panel admin",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/admin",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["admin"]
+            },
+            "description": "Panel de administración: gestión de usuarios y reportes."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar rol de usuario",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/x-www-form-urlencoded"}],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {"key": "user_id", "value": "2", "type": "text"},
+                {"key": "rol", "value": "vendedor", "type": "text"}
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/admin/usuarios",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["admin", "usuarios"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

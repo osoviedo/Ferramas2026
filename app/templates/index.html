@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+    <h1>Bienvenidos a Ferremas</h1>
+    <p>Encuentra todo lo que necesitas para tus proyectos</p>
+</section>
+
+<!-- CATEGORÍAS -->
+<section class="categorias-grid">
+
+    <a href="{{ url_for('tienda.productos', categoria='herramientas-manuales') }}" class="cat-card">
+        <div class="cat-icon icono-amber">
+            <i class="ti ti-tool"></i>
+        </div>
+        <h3>Herramientas manuales</h3>
+        <p>Martillos, llaves, destornilladores</p>
+    </a>
+
+    <a href="{{ url_for('tienda.productos', categoria='equipos-de-seguridad') }}" class="cat-card">
+        <div class="cat-icon icono-teal">
+            <i class="ti ti-shield-check"></i>
+        </div>
+        <h3>Equipos de seguridad</h3>
+        <p>Cascos, guantes, arneses</p>
+    </a>
+
+    <a href="{{ url_for('tienda.productos', categoria='fijaciones') }}" class="cat-card">
+        <div class="cat-icon icono-blue">
+            <i class="ti ti-bolt"></i>
+        </div>
+        <h3>Fijaciones</h3>
+        <p>Pernos, tuercas, clavos</p>
+    </a>
+
+    <a href="{{ url_for('tienda.productos', categoria='materiales-basicos') }}" class="cat-card">
+        <div class="cat-icon icono-purple">
+            <i class="ti ti-box"></i>
+        </div>
+        <h3>Materiales básicos</h3>
+        <p>Cemento, arena, yeso</p>
+    </a>
+
+    <a href="{{ url_for('tienda.productos', categoria='tornillos-y-anclaje') }}" class="cat-card">
+        <div class="cat-icon icono-red">
+            <i class="ti ti-settings"></i>
+        </div>
+        <h3>Tornillos y anclaje</h3>
+        <p>Tornillos, tacos, espárragos</p>
+    </a>
+
+    <a href="{{ url_for('tienda.productos', categoria='equipos-de-medicion') }}" class="cat-card">
+        <div class="cat-icon icono-green">
+            <i class="ti ti-ruler-2"></i>
+        </div>
+        <h3>Equipos de medición</h3>
+        <p>Niveles, metros, escuadras</p>
+    </a>
+
+</section>
+
+<!-- SUSCRIPCIÓN -->
+<section class="suscripcion-section">
+    <div class="suscripcion-card">
+        <i class="ti ti-mail" style="font-size:40px; color:#e8601a;"></i>
+        <h2>Suscríbete a nuestras ofertas</h2>
+        <p>Recibe descuentos exclusivos y novedades directamente en tu correo.</p>
+        <form method="POST" action="{{ url_for('tienda.suscribirse') }}" class="suscripcion-form">
+            <input type="email" name="email" placeholder="Tu correo electrónico" required
+                   style="background:rgba(255,255,255,0.08); border:0.5px solid rgba(255,255,255,0.2); color:#fff; border-radius:8px; padding:10px 16px; flex:1; min-width:250px;">
+            <button type="submit" style="background:#e8601a; color:#fff; border:none; border-radius:8px; padding:10px 24px; font-weight:500; cursor:pointer; white-space:nowrap;">
+                <i class="ti ti-send"></i> Suscribirme
+            </button>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

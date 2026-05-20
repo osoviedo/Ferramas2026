@@ -1,0 +1,36 @@
+# Variables de entorno (secretos)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Node.js
+node_modules/
+
+# Supabase (credenciales y archivos locales)
+supabase/.env
+.supabase/
+.env.supabase
+.env.supabase.local
+**/supabase-credentials*
+**/supabase_credentials*
+
+# Sesiones / cookies exportadas
+cookies*.txt
+
+# Base de datos local
+*.db
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

@@ -1,0 +1,9 @@
+flask
+flask-cors
+flask-sqlalchemy
+flask-login
+pymysql
+werkzeug
+mercadopago
+requests
+python-dotenv

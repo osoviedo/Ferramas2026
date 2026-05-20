@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+    <h1><i class="ti ti-clipboard-check"></i> Panel Vendedor</h1>
+    <p>Gestión de pedidos pendientes de aprobación</p>
+</section>
+
+<div style="max-width:1100px; margin:0 auto; padding: 8px 32px 40px;">
+
+    {% if pedidos %}
+    <div class="table-responsive" style="background:rgba(255,255,255,0.07); border:0.5px solid rgba(255,255,255,0.15); border-radius:14px; padding:24px;">
+        <table class="table table-dark mb-0" style="--bs-table-bg: transparent;">
+            <thead>
+                <tr><th># Pedido</th><th>Cliente</th><th>Total</th><th>Entrega</th><th>Fecha</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+                {% for p in pedidos %}
+                <tr>
+                    <td class="text-white">#{{ p.id }}</td>
+                    <td class="text-white">{{ p.usuario.nombre }}</td>
+                    <td style="color:#e8601a;">${{ p.total }}</td>
+                    <td style="text-transform:capitalize; color:rgba(255,255,255,0.6);">{{ p.modo_entrega }}</td>
+                    <td style="color:rgba(255,255,255,0.6);">{{ p.created_at.strftime('%d/%m %H:%M') if p.created_at else '' }}</td>
+                    <td>
+                        <div style="display:flex; gap:6px;">
+                            <form method="POST" action="{{ url_for('vendedor.aprobar', pedido_id=p.id) }}" style="margin:0;">
+                                <button type="submit" class="btn btn-sm" style="background:rgba(29,158,117,0.2); color:#1d9e75; border:none; border-radius:6px;">
+                                    <i class="ti ti-check"></i> Aprobar
+                                </button>
+                            </form>
+                            <form method="POST" action="{{ url_for('vendedor.rechazar', pedido_id=p.id) }}" style="margin:0;">
+                                <button type="submit" class="btn btn-sm" style="background:rgba(226,75,74,0.2); color:#e24b4a; border:none; border-radius:6px;">
+                                    <i class="ti ti-x"></i> Rechazar
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align:center; padding:40px; color:rgba(255,255,255,0.5);">
+        <i class="ti ti-clipboard-off" style="font-size:48px;"></i>
+        <p style="margin-top:12px;">No hay pedidos pendientes.</p>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

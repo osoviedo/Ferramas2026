@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+    <h1>Carrito de compras</h1>
+    <p>Revisa tus productos antes de comprar</p>
+</section>
+
+<div style="max-width:900px; margin:0 auto; padding: 8px 32px 40px;">
+    <div id="carrito-vacio" style="text-align:center; padding:40px; display:none;">
+        <i class="ti ti-shopping-cart-off" style="font-size:48px; color:rgba(255,255,255,0.3);"></i>
+        <p style="color:rgba(255,255,255,0.5); margin-top:12px;">Tu carrito está vacío.</p>
+        <a href="{{ url_for('tienda.productos') }}" class="btn" style="background:#e8601a; color:#fff; border-radius:8px; margin-top:8px;">
+            <i class="ti ti-package"></i> Ver productos
+        </a>
+    </div>
+
+    <div id="carrito-contenido">
+        <div id="tabla-carrito"></div>
+
+        <div style="text-align:right; margin-top:24px; padding:24px; background:rgba(255,255,255,0.07); border-radius:12px;">
+            <h3 class="text-white mb-3">Total: <span id="total-carrito" style="color:#e8601a;">$0</span></h3>
+            <a href="{{ url_for('tienda.checkout') }}" class="btn btn-lg" style="background:#e8601a; color:#fff; font-weight:500; border-radius:8px;">
+                <i class="ti ti-credit-card"></i> Ir a pagar
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function renderCarrito() {
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    let tabla = document.getElementById("tabla-carrito");
+    let total = 0;
+
+    if (carrito.length === 0) {
+        document.getElementById("carrito-vacio").style.display = "block";
+        document.getElementById("carrito-contenido").style.display = "none";
+        return;
+    }
+
+    document.getElementById("carrito-vacio").style.display = "none";
+    document.getElementById("carrito-contenido").style.display = "block";
+
+    let html = '<div class="table-responsive"><table class="table table-dark" style="--bs-table-bg: rgba(255,255,255,0.05); border-radius:12px; overflow:hidden;">';
+    html += '<thead><tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th><th></th></tr></thead><tbody>';
+
+    carrito.forEach((p, idx) => {
+        let subtotal = p.precio * p.cantidad;
+        total += subtotal;
+        html += `<tr>
+            <td class="text-white">${p.nombre}</td>
+            <td class="text-white">$${p.precio.toLocaleString("es-CL")}</td>
+            <td>
+                <input type="number" min="1" value="${p.cantidad}" style="width:60px; background:rgba(255,255,255,0.1); border:0.5px solid rgba(255,255,255,0.2); color:#fff; border-radius:6px; padding:4px 8px;"
+                    onchange="actualizarCantidad(${p.id}, this.value)">
+            </td>
+            <td class="text-white">$${subtotal.toLocaleString("es-CL")}</td>
+            <td><button class="btn btn-sm" style="background:rgba(226,75,74,0.3); color:#e24b4a;" onclick="eliminarItem(${p.id})">
+                <i class="ti ti-trash"></i></button></td>
+        </tr>`;
+    });
+
+    html += '</tbody></table></div>';
+    tabla.innerHTML = html;
+    document.getElementById("total-carrito").textContent = "$" + total.toLocaleString("es-CL");
+    actualizarContador();
+}
+
+function actualizarCantidad(id, nuevaCantidad) {
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    let item = carrito.find(p => p.id === id);
+    if (item) {
+        item.cantidad = Math.max(1, parseInt(nuevaCantidad) || 1);
+        localStorage.setItem("carrito", JSON.stringify(carrito));
+    }
+    renderCarrito();
+
+    fetch("{{ url_for('carrito.actualizar') }}", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ producto_id: id, cantidad: Math.max(1, parseInt(nuevaCantidad) || 1) })
+    }).catch(() => {});
+}
+
+function eliminarItem(id) {
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    carrito = carrito.filter(p => p.id !== id);
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+    renderCarrito();
+
+    fetch("{{ url_for('carrito.eliminar') }}", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ producto_id: id })
+    }).catch(() => {});
+}
+
+renderCarrito();
+</script>
+{% endblock %}
