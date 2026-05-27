@@ -19,6 +19,22 @@ class PagoService:
         return (not token or token == PagoService._DEFAULT_TEST_TOKEN)
 
     @staticmethod
+    def _urls_retorno_mp(pedido_id):
+        """URLs HTTPS absolutas para back_urls (requerido por auto_return de MP)."""
+        base = (current_app.config.get('PUBLIC_BASE_URL') or '').rstrip('/')
+        if not base:
+            return {
+                'success': url_for('tienda.pago_exito', pedido_id=pedido_id, _external=True),
+                'failure': url_for('tienda.pago_error', pedido_id=pedido_id, _external=True),
+                'pending': url_for('tienda.pago_exito', pedido_id=pedido_id, _external=True),
+            }
+        return {
+            'success': f'{base}/pago/exito?pedido_id={pedido_id}',
+            'failure': f'{base}/pago/error?pedido_id={pedido_id}',
+            'pending': f'{base}/pago/exito?pedido_id={pedido_id}',
+        }
+
+    @staticmethod
     def crear_preferencia(pedido):
         """Crea preferencia en Mercado Pago (o simulada). Solo crea la URL de pago.
         NO modifica el pedido ni el carrito — eso ocurre en /pago/exito."""
@@ -41,18 +57,21 @@ class PagoService:
                 'quantity': pp.cantidad,
                 'unit_price': float(pp.precio_unitario),
             })
+        back_urls = PagoService._urls_retorno_mp(pedido.id)
+        base = (current_app.config.get('PUBLIC_BASE_URL') or '').rstrip('/')
+        notification_url = (
+            f'{base}/api/webhook/mercadopago'
+            if base
+            else url_for('api.webhook_mercadopago', _external=True)
+        )
         preference_data = {
             'items': items,
             'external_reference': str(pedido.id),
-            # Para verificar el pago de forma confiable (webhook) en producción.
-            'notification_url': url_for('api.webhook_mercadopago', _external=True),
-            'back_urls': {
-                'success': url_for('tienda.pago_exito', pedido_id=pedido.id, _external=True),
-                'failure': url_for('tienda.pago_error', pedido_id=pedido.id, _external=True),
-                'pending': url_for('tienda.pago_exito', pedido_id=pedido.id, _external=True),
-            },
+            'notification_url': notification_url,
+            'back_urls': back_urls,
             'auto_return': 'approved',
         }
+        logger.info('MP back_urls.success=%s', back_urls.get('success'))
         try:
             preference_response = sdk.preference().create(preference_data)
             preference = preference_response.get('response', {}) if isinstance(preference_response, dict) else {}

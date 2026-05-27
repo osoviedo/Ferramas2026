@@ -1,7 +1,10 @@
+import os
+
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from werkzeug.middleware.proxy_fix import ProxyFix
 from app.config import Config
 
 db = SQLAlchemy()
@@ -13,6 +16,10 @@ login_manager.login_message = 'Debes iniciar sesión para acceder.'
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    # Render está detrás de proxy: sin esto url_for(_external=True) puede ser http://
+    if os.environ.get('RENDER') or os.environ.get('RENDER_EXTERNAL_URL'):
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+        app.config['PREFERRED_URL_SCHEME'] = 'https'
 
     db.init_app(app)
     CORS(app)
