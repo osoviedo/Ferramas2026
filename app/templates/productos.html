@@ -79,11 +79,16 @@ function agregarAlCarrito(id, nombre, precio, btn) {
 // Selector de moneda
 document.getElementById("selector-moneda").addEventListener("change", function() {
     let moneda = this.value;
+    // Solo visual: guardamos la moneda elegida para mostrar conversión en checkout.
+    localStorage.setItem("moneda_carrito", moneda);
     if (moneda === "CLP") {
         location.href = "{{ url_for('tienda.productos') }}" + "?categoria={{ categoria or '' }}";
     } else {
         location.href = "{{ url_for('tienda.productos') }}" + "?categoria={{ categoria or '' }}&convertir_a=" + moneda;
     }
 });
+
+// Mantener moneda seleccionada para cuando el usuario llegue al carrito/checkout.
+localStorage.setItem("moneda_carrito", document.getElementById("selector-moneda").value);
 </script>
 {% endblock %}

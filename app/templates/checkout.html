@@ -23,6 +23,16 @@
         </a>
     </div>
     <script>localStorage.removeItem("carrito");</script>
+    {% elif pending_verificacion %}
+    <div style="text-align:center; padding:40px; background:rgba(55,138,221,0.12); border:0.5px solid rgba(55,138,221,0.25); border-radius:14px;">
+        <i class="ti ti-hourglass" style="font-size:56px; color:rgba(55,138,221,0.9);"></i>
+        <h2 class="text-white mt-3">Procesando tu pago</h2>
+        <p style="color:rgba(255,255,255,0.6);">Estamos verificando el estado de Mercado Pago. Esto puede tardar unos segundos.</p>
+        <p style="color:rgba(255,255,255,0.6); font-size:13px;">Pedido #{{ pedido_id }}</p>
+        <a href="{{ url_for('auth.perfil') }}" class="btn" style="background:#e8601a; color:#fff; border-radius:8px; margin-top:12px;">
+            <i class="ti ti-user"></i> Ver mi perfil
+        </a>
+    </div>
     {% elif error_pago %}
     <div style="text-align:center; padding:40px; background:rgba(226,75,74,0.15); border:0.5px solid rgba(226,75,74,0.3); border-radius:14px;">
         <i class="ti ti-alert-circle" style="font-size:56px; color:#e24b4a;"></i>
@@ -116,10 +126,11 @@
 
         <div id="descuento-info" style="display:none; margin-top:8px;">
             <span style="color:rgba(255,255,255,0.6); font-size:14px;">Descuento (<span id="descuento-porcentaje">0</span>%): </span>
-            <span style="color:#1d9e75; font-size:14px;">-$<span id="descuento-monto">0</span></span>
+            <span style="color:#1d9e75; font-size:14px;">-<span id="descuento-simbolo">$</span><span id="descuento-monto">0</span></span>
         </div>
 
         <h4 class="text-white mt-3">Total: <span id="total-checkout" style="color:#e8601a;">$0</span></h4>
+        <div id="conversion-visual" style="color:rgba(255,255,255,0.65); font-size:13px; margin-top:6px; display:none;"></div>
 
         {% if current_user.is_authenticated %}
         <button type="submit" class="btn btn-lg w-100 mt-3" style="background:#e8601a; color:#fff; font-weight:500; border-radius:8px; padding:12px;">
@@ -158,40 +169,99 @@ function toggleMetodoPago() {
 
 var descuentoUsuario = {{ current_user.descuento if current_user.is_authenticated else 0 }};
 
+let monedaCarrito = localStorage.getItem("moneda_carrito") || "CLP";
+let tasasDivisas = null;
+
+function simboloMoneda(moneda) {
+    if (moneda === "EUR") return "€";
+    if (moneda === "USD") return "$";
+    return "$";
+}
+
+function convertirDesdeCLP(valorCLP) {
+    if (monedaCarrito === "USD" && tasasDivisas?.dolar) return Math.round(valorCLP / tasasDivisas.dolar);
+    if (monedaCarrito === "EUR" && tasasDivisas?.euro) return Math.round(valorCLP / tasasDivisas.euro);
+    return Math.round(valorCLP);
+}
+
+async function cargarDivisas() {
+    try {
+        const resp = await fetch("{{ url_for('api.api_divisas') }}");
+        if (!resp.ok) return;
+        tasasDivisas = await resp.json();
+    } catch (_) {
+        tasasDivisas = null;
+    }
+}
+
 function cargarResumen() {
     let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     let resumen = document.getElementById("resumen-checkout");
-    let total = 0;
+    let totalCLP = 0;
     let html = '<ul style="list-style:none; padding:0;">';
     carrito.forEach(p => {
-        let sub = p.precio * p.cantidad;
-        total += sub;
-        html += `<li style="margin-bottom:4px;">${p.nombre} x${p.cantidad} — $${sub.toLocaleString("es-CL")}</li>`;
+        let subCLP = p.precio * p.cantidad;
+        totalCLP += subCLP;
+        if (monedaCarrito === "CLP") {
+            html += `<li style="margin-bottom:4px;">${p.nombre} x${p.cantidad} — $${subCLP.toLocaleString("es-CL")}</li>`;
+        } else {
+            let subDisp = convertirDesdeCLP(subCLP);
+            html += `<li style="margin-bottom:4px;">${p.nombre} x${p.cantidad} — ${simboloMoneda(monedaCarrito)}${subDisp.toLocaleString("es-CL")} <span style="color:rgba(255,255,255,0.55);">(CLP $${subCLP.toLocaleString("es-CL")})</span></li>`;
+        }
     });
     html += '</ul>';
     resumen.innerHTML = html;
 
     let descuentoMonto = 0;
     if (descuentoUsuario > 0) {
-        descuentoMonto = Math.round(total * descuentoUsuario / 100);
+        descuentoMonto = Math.round(totalCLP * descuentoUsuario / 100);
         document.getElementById("descuento-info").style.display = "block";
         document.getElementById("descuento-porcentaje").textContent = descuentoUsuario;
-        document.getElementById("descuento-monto").textContent = descuentoMonto.toLocaleString("es-CL");
-        total = total - descuentoMonto;
+        document.getElementById("descuento-simbolo").textContent =
+            monedaCarrito === "CLP" ? "$" : simboloMoneda(monedaCarrito);
+        // Mantener descuento visual en la moneda elegida (solo visual).
+        if (monedaCarrito === "CLP") {
+            document.getElementById("descuento-monto").textContent = descuentoMonto.toLocaleString("es-CL");
+        } else {
+            let descDisp = convertirDesdeCLP(descuentoMonto);
+            document.getElementById("descuento-monto").textContent = descDisp.toLocaleString("es-CL");
+        }
+        totalCLP = totalCLP - descuentoMonto;
     }
 
-    document.getElementById("total-checkout").textContent = "$" + total.toLocaleString("es-CL");
+    let totalDisp = convertirDesdeCLP(totalCLP);
+    if (monedaCarrito === "CLP") {
+        document.getElementById("total-checkout").textContent = "$" + totalCLP.toLocaleString("es-CL");
+        document.getElementById("conversion-visual").style.display = "none";
+    } else {
+        document.getElementById("total-checkout").textContent = simboloMoneda(monedaCarrito) + totalDisp.toLocaleString("es-CL");
+        document.getElementById("conversion-visual").style.display = "block";
+        document.getElementById("conversion-visual").textContent =
+            `Se cobrará en CLP: $${totalCLP.toLocaleString("es-CL")} — ≈ ${simboloMoneda(monedaCarrito)}${totalDisp.toLocaleString("es-CL")}`;
+    }
 }
 
 // Enviar carrito como hidden field al hacer submit, para sincronizar con BD
-document.querySelector('form').addEventListener('submit', function() {
-    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-    let itemsParaBD = carrito.map(p => ({ id: p.id, cantidad: p.cantidad }));
-    document.getElementById("items-carrito").value = JSON.stringify(itemsParaBD);
-});
+let _formCheckout = document.querySelector('form');
+if (_formCheckout) {
+    _formCheckout.addEventListener('submit', function() {
+        let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+        let itemsParaBD = carrito.map(p => ({ id: p.id, cantidad: p.cantidad }));
+        document.getElementById("items-carrito").value = JSON.stringify(itemsParaBD);
+    });
+}
 
-toggleEntrega();
-toggleMetodoPago();
-cargarResumen();
+(async function initCheckout() {
+    // Evita errores en páginas de éxito/error donde no existe el formulario.
+    const resumen = document.getElementById("resumen-checkout");
+    if (!_formCheckout || !resumen) return;
+
+    toggleEntrega();
+    toggleMetodoPago();
+    if (monedaCarrito !== "CLP") {
+        await cargarDivisas();
+    }
+    cargarResumen();
+})();
 </script>
 {% endblock %}
