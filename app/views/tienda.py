@@ -142,10 +142,44 @@ def pago_exito():
 
 @tienda_bp.route('/pago/error')
 def pago_error():
-    """Pago fallido o cancelado: cancela el pedido, mantiene el carrito."""
+    """Maneja retorno de error/fallo y evita falsos negativos por pendientes."""
     pedido_id = request.args.get('pedido_id')
-    if pedido_id:
-        pedido = Pedido.query.get(int(pedido_id))
-        if pedido and pedido.estado == 'pendiente':
+    payment_id = request.args.get('payment_id') or request.args.get('collection_id')
+    status = (
+        request.args.get('status', '')
+        or request.args.get('collection_status', '')
+        or request.args.get('payment_status', '')
+    ).lower()
+
+    if not pedido_id:
+        return render_template('checkout.html', error_pago=True)
+
+    pedido = Pedido.query.get(int(pedido_id))
+    if not pedido:
+        return render_template('checkout.html', error_pago=True)
+
+    if PagoService._es_modo_simulado():
+        if pedido.estado == 'pendiente':
             PagoService.cancelar_pedido(pedido)
+        return render_template('checkout.html', error_pago=True)
+
+    if pedido.estado == 'aprobado':
+        return render_template('checkout.html', exito=True, pedido_id=pedido_id, payment_id=payment_id)
+
+    payment_data = PagoService.verificar_pago(payment_id) if payment_id else None
+    if payment_data:
+        mp_status = (payment_data.get('status') or '').lower()
+        external_ref = str(payment_data.get('external_reference') or '')
+        if mp_status == 'approved' and external_ref == str(pedido.id):
+            if pedido.estado == 'pendiente':
+                PagoService.confirmar_pago(pedido, str(payment_data.get('id')))
+            return render_template('checkout.html', exito=True, pedido_id=pedido_id, payment_id=payment_data.get('id'))
+        if mp_status in ('pending', 'in_process'):
+            return render_template('checkout.html', pending_verificacion=True, pedido_id=pedido_id, payment_id=payment_id)
+
+    if status in ('pending', 'in_process', 'approved'):
+        return render_template('checkout.html', pending_verificacion=True, pedido_id=pedido_id, payment_id=payment_id)
+
+    if pedido.estado == 'pendiente':
+        PagoService.cancelar_pedido(pedido)
     return render_template('checkout.html', error_pago=True)

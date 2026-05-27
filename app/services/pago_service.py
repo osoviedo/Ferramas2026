@@ -49,7 +49,7 @@ class PagoService:
             'back_urls': {
                 'success': url_for('tienda.pago_exito', pedido_id=pedido.id, _external=True),
                 'failure': url_for('tienda.pago_error', pedido_id=pedido.id, _external=True),
-                'pending': url_for('tienda.pago_error', pedido_id=pedido.id, _external=True),
+                'pending': url_for('tienda.pago_exito', pedido_id=pedido.id, _external=True),
             },
             'auto_return': 'approved',
         }
