@@ -58,7 +58,7 @@ class PagoService:
             return {'init_point': preference['init_point']}
         except Exception as e:
             logger.error(f"✗ Error al crear preferencia MP para pedido {pedido.id}: {str(e)}")
-            return PagoService._preferencia_simulada(pedido)
+            return {'error': 'No se pudo crear la preferencia de pago en Mercado Pago.'}
 
     @staticmethod
     def _preferencia_simulada(pedido):
@@ -67,6 +67,20 @@ class PagoService:
             'init_point': url_for('tienda.pago_exito', pedido_id=pedido.id),
             'simulado': True,
         }
+
+    @staticmethod
+    def verificar_pago(payment_id):
+        """Consulta estado de un pago real en Mercado Pago."""
+        if PagoService._es_modo_simulado() or not payment_id:
+            return None
+
+        try:
+            sdk = mercadopago.SDK(current_app.config.get('MP_ACCESS_TOKEN', ''))
+            payment_info = sdk.payment().get(payment_id)
+            return payment_info.get('response', {})
+        except Exception as e:
+            logger.error(f"✗ Error verificando pago MP {payment_id}: {str(e)}")
+            return None
 
     @staticmethod
     def confirmar_pago(pedido, transaccion_id=None):

@@ -62,6 +62,13 @@ def api_categorias():
     return jsonify(lista)
 
 
+@api_bp.route('/api/divisas')
+def api_divisas():
+    """Retorna tasas de cambio CLP para USD/EUR."""
+    ds = DivisaService()
+    return jsonify(ds.obtener_divisas())
+
+
 @api_bp.route('/api/webhook/mercadopago', methods=['POST'])
 def webhook_mercadopago():
     """Recibe notificaciones IPN de Mercado Pago."""

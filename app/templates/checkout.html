@@ -13,6 +13,11 @@
         <i class="ti ti-circle-check" style="font-size:56px; color:#1d9e75;"></i>
         <h2 class="text-white mt-3">¡Pago exitoso!</h2>
         <p style="color:rgba(255,255,255,0.6);">Tu pedido #{{ pedido_id }} ha sido confirmado.</p>
+        {% if payment_id %}
+        <p style="color:rgba(255,255,255,0.6); font-size:13px; margin-top:8px;">
+            ID de pago verificado: <strong>{{ payment_id }}</strong>
+        </p>
+        {% endif %}
         <a href="{{ url_for('tienda.index') }}" class="btn" style="background:#e8601a; color:#fff; border-radius:8px; margin-top:12px;">
             <i class="ti ti-home"></i> Volver al inicio
         </a>

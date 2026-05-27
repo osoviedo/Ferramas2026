@@ -7,6 +7,14 @@
 </section>
 
 <div style="max-width:900px; margin:0 auto; padding: 8px 32px 40px;">
+    <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+        <select id="selector-moneda-carrito" class="form-select" style="width:auto; background:rgba(255,255,255,0.08); border:0.5px solid rgba(255,255,255,0.2); color:#fff; border-radius:8px; padding:4px 12px; font-size:13px;">
+            <option value="CLP">CLP $</option>
+            <option value="USD">USD $</option>
+            <option value="EUR">EUR €</option>
+        </select>
+    </div>
+
     <div id="carrito-vacio" style="text-align:center; padding:40px; display:none;">
         <i class="ti ti-shopping-cart-off" style="font-size:48px; color:rgba(255,255,255,0.3);"></i>
         <p style="color:rgba(255,255,255,0.5); margin-top:12px;">Tu carrito está vacío.</p>
@@ -31,10 +39,35 @@
 
 {% block scripts %}
 <script>
+let monedaCarrito = localStorage.getItem("moneda_carrito") || "CLP";
+let tasasDivisas = null;
+
+function simboloMoneda(moneda) {
+    if (moneda === "EUR") return "€";
+    return "$";
+}
+
+function convertirDesdeCLP(valorCLP) {
+    if (monedaCarrito === "USD" && tasasDivisas?.dolar) return Math.round(valorCLP / tasasDivisas.dolar);
+    if (monedaCarrito === "EUR" && tasasDivisas?.euro) return Math.round(valorCLP / tasasDivisas.euro);
+    return Math.round(valorCLP);
+}
+
+async function cargarDivisas() {
+    try {
+        const resp = await fetch("{{ url_for('api.api_divisas') }}");
+        if (!resp.ok) return;
+        tasasDivisas = await resp.json();
+    } catch (_) {
+        tasasDivisas = null;
+    }
+}
+
 function renderCarrito() {
     let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     let tabla = document.getElementById("tabla-carrito");
     let total = 0;
+    const simbolo = simboloMoneda(monedaCarrito);
 
     if (carrito.length === 0) {
         document.getElementById("carrito-vacio").style.display = "block";
@@ -49,16 +82,17 @@ function renderCarrito() {
     html += '<thead><tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th><th></th></tr></thead><tbody>';
 
     carrito.forEach((p, idx) => {
-        let subtotal = p.precio * p.cantidad;
+        let precioConvertido = convertirDesdeCLP(p.precio);
+        let subtotal = precioConvertido * p.cantidad;
         total += subtotal;
         html += `<tr>
             <td class="text-white">${p.nombre}</td>
-            <td class="text-white">$${p.precio.toLocaleString("es-CL")}</td>
+            <td class="text-white">${simbolo}${precioConvertido.toLocaleString("es-CL")}</td>
             <td>
                 <input type="number" min="1" value="${p.cantidad}" style="width:60px; background:rgba(255,255,255,0.1); border:0.5px solid rgba(255,255,255,0.2); color:#fff; border-radius:6px; padding:4px 8px;"
                     onchange="actualizarCantidad(${p.id}, this.value)">
             </td>
-            <td class="text-white">$${subtotal.toLocaleString("es-CL")}</td>
+            <td class="text-white">${simbolo}${subtotal.toLocaleString("es-CL")}</td>
             <td><button class="btn btn-sm" style="background:rgba(226,75,74,0.3); color:#e24b4a;" onclick="eliminarItem(${p.id})">
                 <i class="ti ti-trash"></i></button></td>
         </tr>`;
@@ -66,7 +100,7 @@ function renderCarrito() {
 
     html += '</tbody></table></div>';
     tabla.innerHTML = html;
-    document.getElementById("total-carrito").textContent = "$" + total.toLocaleString("es-CL");
+    document.getElementById("total-carrito").textContent = simbolo + total.toLocaleString("es-CL");
     actualizarContador();
 }
 
@@ -99,6 +133,21 @@ function eliminarItem(id) {
     }).catch(() => {});
 }
 
-renderCarrito();
+document.getElementById("selector-moneda-carrito").value = monedaCarrito;
+document.getElementById("selector-moneda-carrito").addEventListener("change", async function() {
+    monedaCarrito = this.value;
+    localStorage.setItem("moneda_carrito", monedaCarrito);
+    if (monedaCarrito !== "CLP" && !tasasDivisas) {
+        await cargarDivisas();
+    }
+    renderCarrito();
+});
+
+(async function initCarrito() {
+    if (monedaCarrito !== "CLP") {
+        await cargarDivisas();
+    }
+    renderCarrito();
+})();
 </script>
 {% endblock %}

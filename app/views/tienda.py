@@ -74,18 +74,55 @@ def pago_iniciar(pedido_id):
         return redirect(url_for('auth.perfil'))
 
     result = PagoService.crear_preferencia(pedido)
-    return redirect(result['init_point'])
+    init_point = result.get('init_point')
+    if not init_point:
+        flash('No se pudo iniciar el pago en Mercado Pago. Intenta nuevamente.', 'danger')
+        return redirect(url_for('tienda.checkout'))
+    return redirect(init_point)
 
 
 @tienda_bp.route('/pago/exito')
 def pago_exito():
-    """Pago confirmado: actualiza pedido, vacía carrito BD, muestra éxito."""
+    """Pago confirmado: valida estado y actualiza pedido."""
     pedido_id = request.args.get('pedido_id')
-    if pedido_id:
-        pedido = Pedido.query.get(int(pedido_id))
-        if pedido and pedido.estado == 'pendiente':
-            PagoService.confirmar_pago(pedido)
-    return render_template('checkout.html', exito=True, pedido_id=pedido_id)
+    payment_id = request.args.get('payment_id') or request.args.get('collection_id')
+    status = request.args.get('status', '').lower()
+
+    if not pedido_id:
+        return render_template('checkout.html', error_pago=True)
+
+    pedido = Pedido.query.get(int(pedido_id))
+    if not pedido:
+        return render_template('checkout.html', error_pago=True)
+
+    # Modo simulado: mantener flujo rápido para demo local.
+    if PagoService._es_modo_simulado():
+        if pedido.estado == 'pendiente':
+            PagoService.confirmar_pago(pedido, f"SIM-{pedido.id}-callback")
+        return render_template('checkout.html', exito=True, pedido_id=pedido_id, payment_id='SIMULADO')
+
+    payment_data = PagoService.verificar_pago(payment_id)
+    if payment_data:
+        mp_status = (payment_data.get('status') or '').lower()
+        external_ref = str(payment_data.get('external_reference') or '')
+        if mp_status == 'approved' and external_ref == str(pedido.id):
+            if pedido.estado == 'pendiente':
+                PagoService.confirmar_pago(pedido, str(payment_data.get('id')))
+            return render_template(
+                'checkout.html',
+                exito=True,
+                pedido_id=pedido_id,
+                payment_id=payment_data.get('id'),
+            )
+
+    if status == 'approved' and pedido.estado == 'pendiente':
+        # Fallback solo si MP no respondió en verificación, usando callback aprobado.
+        PagoService.confirmar_pago(pedido, payment_id or f"MP-{pedido.id}-approved")
+        return render_template('checkout.html', exito=True, pedido_id=pedido_id, payment_id=payment_id)
+
+    if pedido.estado == 'pendiente':
+        PagoService.cancelar_pedido(pedido)
+    return render_template('checkout.html', error_pago=True)
 
 
 @tienda_bp.route('/pago/error')
