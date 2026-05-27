@@ -55,16 +55,24 @@ class PagoService:
         }
         try:
             preference_response = sdk.preference().create(preference_data)
-            preference = preference_response['response']
-            if not preference or not preference.get('init_point'):
+            preference = preference_response.get('response', {}) if isinstance(preference_response, dict) else {}
+            init_point = preference.get('init_point') or preference.get('sandbox_init_point')
+            if not preference or not init_point:
+                error_detail = preference_response.get('message') if isinstance(preference_response, dict) else None
+                if not error_detail and isinstance(preference, dict):
+                    cause = preference.get('cause') or preference_response.get('cause') if isinstance(preference_response, dict) else None
+                    if cause:
+                        error_detail = str(cause)
+                if not error_detail:
+                    error_detail = str(preference_response)
                 logger.error(
-                    "✗ Respuesta MP sin init_point para pedido %s: %s",
+                    "✗ Respuesta MP sin init_point/sandbox_init_point para pedido %s: %s",
                     pedido.id,
                     preference_response,
                 )
-                return {'error': 'Mercado Pago no devolvió enlace de pago.'}
+                return {'error': f'Mercado Pago no devolvió enlace de pago. {error_detail}'}
             logger.info(f"✓ Preferencia Mercado Pago creada para pedido {pedido.id}")
-            return {'init_point': preference['init_point']}
+            return {'init_point': init_point}
         except Exception as e:
             logger.error(f"✗ Error al crear preferencia MP para pedido {pedido.id}: {str(e)}")
             return {'error': str(e)}
