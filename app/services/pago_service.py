@@ -56,12 +56,18 @@ class PagoService:
         try:
             preference_response = sdk.preference().create(preference_data)
             preference = preference_response['response']
+            if not preference or not preference.get('init_point'):
+                logger.error(
+                    "✗ Respuesta MP sin init_point para pedido %s: %s",
+                    pedido.id,
+                    preference_response,
+                )
+                return {'error': 'Mercado Pago no devolvió enlace de pago.'}
             logger.info(f"✓ Preferencia Mercado Pago creada para pedido {pedido.id}")
             return {'init_point': preference['init_point']}
         except Exception as e:
             logger.error(f"✗ Error al crear preferencia MP para pedido {pedido.id}: {str(e)}")
-            # Si falla la integración real, al menos mantenemos un flujo demostrable.
-            return PagoService._preferencia_simulada(pedido)
+            return {'error': str(e)}
 
     @staticmethod
     def _preferencia_simulada(pedido):

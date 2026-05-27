@@ -76,7 +76,8 @@ def pago_iniciar(pedido_id):
     result = PagoService.crear_preferencia(pedido)
     init_point = result.get('init_point')
     if not init_point:
-        flash('No se pudo iniciar el pago en Mercado Pago. Intenta nuevamente.', 'danger')
+        error_mp = result.get('error', 'No se pudo iniciar el pago en Mercado Pago.')
+        flash(f'No se pudo iniciar el pago en Mercado Pago. Detalle: {error_mp}', 'danger')
         return redirect(url_for('tienda.checkout'))
     return redirect(init_point)
 
