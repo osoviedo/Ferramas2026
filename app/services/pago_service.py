@@ -75,7 +75,8 @@ class PagoService:
         try:
             preference_response = sdk.preference().create(preference_data)
             preference = preference_response.get('response', {}) if isinstance(preference_response, dict) else {}
-            init_point = preference.get('init_point') or preference.get('sandbox_init_point')
+            # Credenciales de prueba: usar sandbox primero (tarjetas APRO solo funcionan ahí).
+            init_point = preference.get('sandbox_init_point') or preference.get('init_point')
             if not preference or not init_point:
                 error_detail = preference_response.get('message') if isinstance(preference_response, dict) else None
                 if not error_detail and isinstance(preference, dict):
