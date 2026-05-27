@@ -122,6 +122,13 @@
         </div>
 
         <h4 class="text-white mb-3"><i class="ti ti-receipt"></i> Resumen</h4>
+        <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+            <select id="selector-moneda-checkout" class="form-select" style="width:auto; background:rgba(255,255,255,0.08); border:0.5px solid rgba(255,255,255,0.2); color:#fff; border-radius:8px; padding:4px 12px; font-size:13px;">
+                <option value="CLP">CLP $</option>
+                <option value="USD">USD $</option>
+                <option value="EUR">EUR €</option>
+            </select>
+        </div>
         <div id="resumen-checkout" style="color:rgba(255,255,255,0.7); font-size:14px;"></div>
 
         <div id="descuento-info" style="display:none; margin-top:8px;">
@@ -261,6 +268,20 @@ if (_formCheckout) {
     if (monedaCarrito !== "CLP") {
         await cargarDivisas();
     }
+
+    const selectorMoneda = document.getElementById("selector-moneda-checkout");
+    if (selectorMoneda) {
+        selectorMoneda.value = monedaCarrito;
+        selectorMoneda.addEventListener("change", async function() {
+            monedaCarrito = this.value;
+            localStorage.setItem("moneda_carrito", monedaCarrito);
+            if (monedaCarrito !== "CLP" && !tasasDivisas) {
+                await cargarDivisas();
+            }
+            cargarResumen();
+        });
+    }
+
     cargarResumen();
 })();
 </script>

@@ -86,7 +86,11 @@ def pago_exito():
     """Pago: intenta confirmar de forma verificable (SDK/webhook) y muestra estado."""
     pedido_id = request.args.get('pedido_id')
     payment_id = request.args.get('payment_id') or request.args.get('collection_id')
-    status = request.args.get('status', '').lower()
+    status = (
+        request.args.get('status', '')
+        or request.args.get('collection_status', '')
+        or request.args.get('payment_status', '')
+    ).lower()
 
     if not pedido_id:
         return render_template('checkout.html', error_pago=True)

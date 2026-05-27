@@ -71,33 +71,45 @@ def api_divisas():
 
 @api_bp.route('/api/webhook/mercadopago', methods=['POST'])
 def webhook_mercadopago():
-    """Recibe notificaciones IPN de Mercado Pago."""
-    data = request.get_json()
-    if not data:
-        return jsonify({'error': 'invalid data'}), 400
+    """Recibe notificaciones de Mercado Pago y confirma pagos aprobados."""
+    if PagoService._es_modo_simulado():
+        return jsonify({'status': 'simulated_mode'}), 200
 
-    action = data.get('action', '')
-    if action == 'payment.created' or action == 'payment.updated':
-        payment_id = data.get('data', {}).get('id', '')
-        if payment_id and not PagoService._es_modo_simulado():
-            # En modo real, verificar el pago contra la API de MP
-            import mercadopago
-            access_token = current_app.config.get('MP_ACCESS_TOKEN', '')
-            sdk = mercadopago.SDK(access_token)
-            payment_info = sdk.payment().get(payment_id)
-            status = payment_info.get('response', {}).get('status', '')
-            external_ref = payment_info.get('response', {}).get('external_reference', '')
-            if status == 'approved' and external_ref:
-                pedido = Pedido.query.get(int(external_ref))
-                if pedido and pedido.estado == 'pendiente':
-                    PagoService.confirmar_pago(pedido, payment_id)
-        else:
-            # Modo simulado: buscar por external_reference
-            ext_ref = data.get('external_reference', data.get('data', {}).get('id', ''))
-    elif action == 'test':
+    # MP puede enviar JSON o query params (topic/type + id/data.id).
+    data = request.get_json(silent=True) or {}
+    topic = (
+        request.args.get('topic')
+        or request.args.get('type')
+        or data.get('type')
+        or data.get('topic')
+        or ''
+    )
+
+    payment_id = (
+        request.args.get('id')
+        or data.get('data', {}).get('id')
+        or data.get('id')
+        or ''
+    )
+
+    if topic == 'test' or data.get('action') == 'test':
         return jsonify({'status': 'ok'}), 200
-    else:
-        # Para otros tipos de notificación, procesar genéricamente
-        PagoService.procesar_webhook(data)
+
+    if topic and topic != 'payment':
+        return jsonify({'status': 'ignored_topic'}), 200
+
+    if not payment_id:
+        return jsonify({'status': 'ignored_no_payment_id'}), 200
+
+    payment_data = PagoService.verificar_pago(str(payment_id))
+    if not payment_data:
+        return jsonify({'status': 'verification_failed'}), 200
+
+    mp_status = (payment_data.get('status') or '').lower()
+    external_ref = str(payment_data.get('external_reference') or '')
+    if mp_status == 'approved' and external_ref.isdigit():
+        pedido = Pedido.query.get(int(external_ref))
+        if pedido and pedido.estado == 'pendiente':
+            PagoService.confirmar_pago(pedido, str(payment_data.get('id') or payment_id))
 
     return jsonify({'status': 'received'}), 200
