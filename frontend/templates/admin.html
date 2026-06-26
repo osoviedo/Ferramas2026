@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+    <h1><i class="ti ti-dashboard"></i> Panel Administrador</h1>
+    <p>Gestión completa del sistema</p>
+</section>
+
+<div style="max-width:1100px; margin:0 auto; padding: 8px 32px 40px;">
+
+    <!-- STATS -->
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:32px;">
+        <div style="background:rgba(55,138,221,0.15); border-radius:14px; padding:24px; text-align:center;">
+            <i class="ti ti-users" style="font-size:28px; color:#378add;"></i>
+            <h3 class="text-white mt-2 mb-0">{{ total_usuarios }}</h3>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin:0;">Usuarios</p>
+        </div>
+        <div style="background:rgba(239,159,39,0.15); border-radius:14px; padding:24px; text-align:center;">
+            <i class="ti ti-package" style="font-size:28px; color:#ef9f27;"></i>
+            <h3 class="text-white mt-2 mb-0">{{ total_pedidos }}</h3>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin:0;">Pedidos</p>
+        </div>
+        <div style="background:rgba(29,158,117,0.15); border-radius:14px; padding:24px; text-align:center;">
+            <i class="ti ti-cash" style="font-size:28px; color:#1d9e75;"></i>
+            <h3 class="text-white mt-2 mb-0">${{ total_ventas }}</h3>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin:0;">Ventas totales</p>
+        </div>
+    </div>
+
+    <!-- GESTIÓN DE USUARIOS -->
+    <h4 class="text-white mb-3"><i class="ti ti-users"></i> Gestión de usuarios</h4>
+    <div class="table-responsive mb-4" style="background:rgba(255,255,255,0.07); border:0.5px solid rgba(255,255,255,0.15); border-radius:14px; padding:24px;">
+        <table class="table table-dark mb-0" style="--bs-table-bg: transparent;">
+            <thead>
+                <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Rol actual</th><th>Cambiar rol</th></tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td class="text-white">{{ u.id }}</td>
+                    <td class="text-white">{{ u.nombre }}</td>
+                    <td style="color:rgba(255,255,255,0.6);">{{ u.email }}</td>
+                    <td><span class="badge bg-secondary" style="text-transform:capitalize;">{{ u.rol }}</span></td>
+                    <td>
+                        <form method="POST" action="{{ url_for('admin.usuarios') }}" style="display:flex; gap:6px; margin:0;">
+                            <input type="hidden" name="user_id" value="{{ u.id }}">
+                            <select name="rol" class="form-select form-select-sm" style="width:auto; background:rgba(255,255,255,0.08); border:0.5px solid rgba(255,255,255,0.2); color:#fff; border-radius:6px; font-size:12px;">
+                                <option value="cliente" {% if u.rol == 'cliente' %}selected{% endif %}>Cliente</option>
+                                <option value="vendedor" {% if u.rol == 'vendedor' %}selected{% endif %}>Vendedor</option>
+                                <option value="bodeguero" {% if u.rol == 'bodeguero' %}selected{% endif %}>Bodeguero</option>
+                                <option value="contador" {% if u.rol == 'contador' %}selected{% endif %}>Contador</option>
+                                <option value="admin" {% if u.rol == 'admin' %}selected{% endif %}>Admin</option>
+                            </select>
+                            <button type="submit" class="btn btn-sm" style="background:#e8601a; color:#fff; border-radius:6px; font-size:12px;">Actualizar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PEDIDOS RECIENTES -->
+    <h4 class="text-white mb-3"><i class="ti ti-receipt"></i> Pedidos recientes</h4>
+    <div class="table-responsive" style="background:rgba(255,255,255,0.07); border:0.5px solid rgba(255,255,255,0.15); border-radius:14px; padding:24px;">
+        <table class="table table-dark mb-0" style="--bs-table-bg: transparent;">
+            <thead>
+                <tr><th>#</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Fecha</th></tr>
+            </thead>
+            <tbody>
+                {% for p in pedidos[:20] %}
+                <tr>
+                    <td class="text-white">#{{ p.id }}</td>
+                    <td class="text-white">{{ p.usuario.nombre }}</td>
+                    <td style="color:#e8601a;">${{ p.total }}</td>
+                    <td>
+                        {% set badge_class = {'pendiente': 'warning', 'aprobado': 'info', 'preparando': 'primary', 'entregado': 'success', 'rechazado': 'danger', 'cancelado': 'secondary'} %}
+                        <span class="badge bg-{{ badge_class.get(p.estado, 'secondary') }}">{{ p.estado }}</span>
+                    </td>
+                    <td style="color:rgba(255,255,255,0.6);">{{ p.created_at.strftime('%d/%m %H:%M') if p.created_at else '' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}
