@@ -1,3 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- TÍTULO -->
+<section class="hero" style="padding: 32px 32px 16px;">
+    <h1 id="titulo-categoria">{% if categoria %}{{ categoria.replace('-', ' ').title() }}{% else %}Todos los productos{% endif %}</h1>
+    <p id="subtitulo-categoria" style="display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;">
+        <span>Encuentra los mejores productos</span>
+        <select id="selector-moneda" class="form-select" style="width:auto; display:inline; background:rgba(255,255,255,0.08); border:0.5px solid rgba(255,255,255,0.2); color:#fff; border-radius:8px; padding:4px 12px; font-size:13px;">
+            <option value="CLP" {% if convert_to != 'USD' and convert_to != 'EUR' %}selected{% endif %}>CLP $</option>
+            <option value="USD" {% if convert_to == 'USD' %}selected{% endif %}>USD $ (dólar)</option>
+            <option value="EUR" {% if convert_to == 'EUR' %}selected{% endif %}>EUR €</option>
+        </select>
+    </p>
+</section>
+
+<!-- GRID -->
+<section class="productos-grid">
+    {% if productos %}
+    {% for p in productos %}
+    <div class="producto-card">
+        <div class="producto-imagen">
+            <img src="{{ url_for('static', filename='img/Productos/' + p.imagen) }}"
+                 alt="{{ p.nombre }}"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="producto-icono-fallback" style="display:none;">
+                <i class="ti ti-package" style="font-size:32px; color:rgba(255,255,255,0.3);"></i>
+            </div>
+        </div>
+        <h3>{{ p.nombre }}</h3>
+        <p class="producto-precio" data-precio-clp="{{ p.precio }}">${{ p.precio }}</p>
+        <p class="producto-stock">
+            <i class="ti ti-package" style="font-size:13px;"></i>
+            Stock: {{ p.stock }} unidades
+        </p>
+        <button class="btn-agregar" onclick="agregarAlCarrito({{ p.id }}, '{{ p.nombre }}', {{ p.precio }}, this)">
+            <i class="ti ti-shopping-cart-plus"></i>
+            Agregar al carrito
+        </button>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div style="text-align:center; padding:40px; color:rgba(255,255,255,0.5); grid-column: 1/-1;">
+        <i class="ti ti-package-off" style="font-size:40px;"></i>
+        <p style="margin-top:12px;">No hay productos en esta categoría.</p>
+    </div>
+    {% endif %}
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Carrito localStorage
+function agregarAlCarrito(id, nombre, precio, btn) {
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    let existe = carrito.find(p => p.id === id);
+    if (existe) {
+        existe.cantidad++;
+    } else {
+        carrito.push({ id, nombre, precio, cantidad: 1 });
+    }
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+    actualizarContador();
+
+    // Sincronizar con BD
+    fetch("{{ url_for('carrito.agregar') }}", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ producto_id: id, cantidad: 1 })
+    }).catch(() => {});
+
+    btn.innerHTML = '<i class="ti ti-check"></i> Agregado';
+    setTimeout(() => {
+        btn.innerHTML = '<i class="ti ti-shopping-cart-plus"></i> Agregar al carrito';
+    }, 1500);
+}
+
+// Selector de moneda
+document.getElementById("selector-moneda").addEventListener("change", function() {
+    let moneda = this.value;
+    if (moneda === "CLP") {
+        location.href = "{{ url_for('tienda.productos') }}" + "?categoria={{ categoria or '' }}";
+    } else {
+        location.href = "{{ url_for('tienda.productos') }}" + "?categoria={{ categoria or '' }}&convertir_a=" + moneda;
+    }
+});
+
 // Conversión de precios visibles según la moneda seleccionada.
 // Los valores vienen del backend (DivisaService -> mindicador.cl / Banco Central).
 // El carrito y los totales se mantienen SIEMPRE en CLP (data-precio-clp).
