@@ -110,3 +110,18 @@ Copiar `.env.example` a `.env` y editar:
 - Si no se configuran credenciales reales de Mercado Pago, los pagos se simulan automáticamente
 - Las contraseñas se almacenan con hash (werkzeug.security)
 - Los endpoints originales (`/productos`, `/categorias`) ahora están bajo `/api/` y usan SQLAlchemy
+
+## Pruebas (evaluación)
+
+```bash
+pip install -r requirements.txt
+python -m pytest -v                    # todos los tests
+python -m pytest -m unit -v            # unitarios
+python -m pytest -m integration -v     # integración
+python -m pytest -m mock -v            # con mocks
+python -m pytest -m acceptance -v      # criterios de aceptación
+python -m pytest -m load -v            # carga
+python -m pytest -m stress -v          # estrés
+```
+
+Detalle de casos CA01–CA07 y plantillas del curso: `docs/CASOS_PRUEBA_FERRAMAS.md`

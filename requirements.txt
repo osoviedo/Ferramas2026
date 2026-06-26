@@ -7,3 +7,5 @@ werkzeug
 mercadopago
 requests
 python-dotenv
+pytest
+pytest-cov
