@@ -6,6 +6,10 @@ Ferramas es un e-commerce de ferretería desarrollado en Flask con API REST, SQL
 
 ## 1.2.1 Elementos de pruebas
 
+Listado de todos los módulos, componentes o elementos que se van a probar. Si es de alto nivel, se listan las áreas funcionales (módulos o procesos que cubre el Testing), por otro lado, si es de un nivel detallado se listan los programas, unidades o módulos.
+
+Elementos de Ferramas (nivel detallado):
+
 - API REST: `app/api/producto_api.py` (/api/productos, /api/categorias, /api/divisas)
 - Vistas: `app/views/tienda.py`, `carrito.py`, `auth.py`
 - Servicios: AuthService, DivisaService, PagoService

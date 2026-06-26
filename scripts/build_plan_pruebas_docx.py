@@ -7,6 +7,8 @@ from pathlib import Path
 from docx import Document
 from docx.shared import RGBColor
 from docx.oxml.ns import qn
+from docx.oxml import OxmlElement
+from docx.text.paragraph import Paragraph
 
 SRC = Path(r"c:\Users\Jose\Desktop\test\3.2.4 Plantilla_Plan_de_Pruebas.docx")
 DST = Path(r"c:\Users\Jose\Desktop\Ferramas2026-main\docs\Plan_de_Pruebas_Ferramas.docx")
@@ -32,13 +34,24 @@ SECTION_INSERTS = {
         "(unitarias, integración, mock, aceptación, carga y estrés). Criterio de éxito: "
         "30 passed y cobertura igual o superior al 55%."
     ),
-    "Elementos de pruebas": (
-        "Módulos a probar: (1) API REST app/api/producto_api.py — /api/productos, "
-        "/api/categorias, /api/divisas; (2) Vistas app/views/ — tienda, carrito, auth; "
-        "(3) Servicios AuthService, DivisaService, PagoService; (4) Modelos Producto, "
-        "Usuario, Carrito, Pedido; (5) Suite tests/ con 30 casos automatizados."
-    ),
 }
+
+STANDARD_121 = (
+    "Listado de todos los módulos, componentes o elementos que se van a probar. "
+    "Si es de alto nivel, se listan las áreas funcionales (módulos o procesos que cubre "
+    "el Testing), por otro lado, si es de un nivel detallado se listan los programas, "
+    "unidades o módulos."
+)
+
+FERRAMAS_121 = (
+    "Elementos de Ferramas (nivel detallado): (1) API REST — app/api/producto_api.py "
+    "(/api/productos, /api/categorias, /api/divisas, webhook Mercado Pago); "
+    "(2) Vistas web — app/views/tienda.py, carrito.py, auth.py, admin, vendedor, bodeguero; "
+    "(3) Servicios — AuthService, DivisaService, PagoService; "
+    "(4) Modelos ORM — Producto, Usuario, Carrito, Pedido; "
+    "(5) Suite de pruebas — carpeta tests/ (30 casos: unitarios, integración, mock, "
+    "aceptación, carga y estrés)."
+)
 
 DELETE_PARAGRAPH_CONTAINS = [
     "Esta plantilla tiene por finalidad servir de base",
@@ -225,6 +238,68 @@ def insert_after_heading(doc, heading, content):
     return found
 
 
+def insert_paragraph_after(paragraph, text):
+    """Inserta un párrafo nuevo inmediatamente después del dado."""
+    new_p = OxmlElement("w:p")
+    paragraph._element.addnext(new_p)
+    new_para = Paragraph(new_p, paragraph._parent)
+    run = new_para.add_run(text)
+    run.font.color.rgb = RGBColor(0, 0, 0)
+    return new_para
+
+
+def fill_elementos_pruebas(doc):
+    """1.2.1: párrafo estándar de la plantilla + lista Ferramas debajo."""
+    for i, p in enumerate(doc.paragraphs):
+        if paragraph_text(p).strip() != "Elementos de pruebas":
+            continue
+        # Solo el cuerpo del documento (no la tabla de contenidos)
+        if i == 0 or paragraph_text(doc.paragraphs[i - 1]).strip() != "Alcance de las pruebas":
+            continue
+
+        listado_idx = None
+        for j in range(i + 1, min(i + 5, len(doc.paragraphs))):
+            if paragraph_text(doc.paragraphs[j]).startswith("Listado de todos"):
+                listado_idx = j
+                break
+
+        if listado_idx is None:
+            # Buscar primer párrafo no vacío tras el título
+            target = i + 1
+            while target < len(doc.paragraphs) and not paragraph_text(doc.paragraphs[target]):
+                target += 1
+            if target < len(doc.paragraphs):
+                p_std = doc.paragraphs[target]
+            else:
+                p_std = insert_paragraph_after(p, STANDARD_121)
+                insert_paragraph_after(p_std, FERRAMAS_121)
+                break
+            p_std.clear()
+            r = p_std.add_run(STANDARD_121)
+            r.font.color.rgb = RGBColor(0, 0, 0)
+            insert_paragraph_after(p_std, FERRAMAS_121)
+            break
+
+        p_listado = doc.paragraphs[listado_idx]
+        p_listado.clear()
+        r = p_listado.add_run(STANDARD_121)
+        r.font.color.rgb = RGBColor(0, 0, 0)
+
+        ferramas_idx = listado_idx + 1
+        if ferramas_idx < len(doc.paragraphs):
+            pn = paragraph_text(doc.paragraphs[ferramas_idx])
+            if pn.startswith("Pruebas funcionales"):
+                insert_paragraph_after(p_listado, FERRAMAS_121)
+            else:
+                p_ferr = doc.paragraphs[ferramas_idx]
+                p_ferr.clear()
+                r2 = p_ferr.add_run(FERRAMAS_121)
+                r2.font.color.rgb = RGBColor(0, 0, 0)
+        else:
+            insert_paragraph_after(p_listado, FERRAMAS_121)
+        break
+
+
 def fill_criteria_sections(doc):
     entries = {
         "Criterio de entrada para el": (
@@ -334,6 +409,7 @@ def process_document():
                         break
                 break
 
+    fill_elementos_pruebas(doc)
     fill_use_cases(doc)
     fill_criteria_sections(doc)
     fill_risk_table(doc)
