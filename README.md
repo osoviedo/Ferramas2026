@@ -1,55 +1,29 @@
 # Ferramas — E-commerce de Ferretería
 
-Sistema e-commerce completo construido con Flask, SQLAlchemy, Bootstrap 5 y MariaDB.
+Sistema e-commerce completo construido con Flask, SQLAlchemy, Bootstrap 5 y SQLite.
 
 ## Estructura del proyecto
 
 ```
 Ferramas2026/
-├── backend/
+├── app/
 │   ├── __init__.py          # Factory pattern, Flask-Login, SQLAlchemy
 │   ├── config.py            # Variables de entorno y configuración
-│   ├── models/
-│   │   ├── usuario.py       # Usuario (UserMixin), roles: cliente/admin/vendedor/bodeguero/contador
-│   │   ├── producto.py      # Producto (mapea tabla existente)
-│   │   ├── pedido.py        # Pedido, PedidoProducto, Pago, Direccion
-│   │   └── carrito.py       # Carrito, CarritoProducto
-│   ├── services/
-│   │   ├── auth_service.py  # Registro, login, hash de contraseñas
-│   │   ├── pago_service.py  # Mercado Pago (real + simulado)
-│   │   ├── divisa_service.py # mindicador.cl para USD/EUR con caché
-│   │   └── email_service.py # Placeholder de notificaciones
+│   ├── models/              # Usuario, Producto, Pedido, Carrito, etc.
+│   ├── services/            # Auth, pagos (Mercado Pago), divisas, email
 │   ├── api/
 │   │   └── producto_api.py  # API REST: /api/productos, /api/categorias, etc.
-│   └── views/
-│       ├── auth.py          # Login, registro, logout, perfil
-│       ├── tienda.py        # Index, productos, checkout
-│       ├── carrito.py       # Carrito CRUD, checkout → pedido
-│       ├── vendedor.py      # Panel vendedor: aprobar/rechazar pedidos
-│       ├── bodeguero.py     # Panel bodeguero: preparar/entregar pedidos
-│       └── admin.py         # Panel admin: gestión de usuarios, reportes
-├── frontend/
+│   ├── views/               # Rutas web: tienda, carrito, auth, paneles
 │   ├── static/
-│   │   ├── styles.css       # Tema oscuro café #2c1a0e
+│   │   ├── styles.css
 │   │   └── img/Productos/   # Imágenes de productos
-│   └── templates/
-│       ├── base.html        # Layout con navbar, footer, flash messages
-│       ├── index.html       # Hero + grid de 6 categorías
-│       ├── productos.html   # Cards de productos, filtro por categoría, selector moneda
-│       ├── carrito.html     # Tabla carrito localStorage, cantidades, total
-│       ├── checkout.html    # Retiro/despacho, resumen, botón Mercado Pago
-│       ├── login.html       # Formulario email + password
-│       ├── registro.html    # Formulario nombre + email + password
-│       ├── perfil.html      # Datos usuario + historial pedidos
-│       ├── vendedor.html    # Tabla pedidos pendientes, aprobar/rechazar
-│       ├── bodeguero.html   # Tabla órdenes, preparar/entregar
-│       └── admin.html       # Stats, gestión usuarios, pedidos recientes
+│   └── templates/           # HTML Jinja2 (index, productos, checkout, ...)
 ├── database/
-│   └── schema.sql           # Tablas nuevas (usuarios, carrito, pedidos, etc.)
+│   └── schema.sql
 ├── docs/
-│   └── postman_collection.json  # Colección Postman v2.1
+│   └── postman_collection.json
 ├── requirements.txt
-├── run.py
+├── run.py                   # Punto de entrada: python run.py
 ├── .env.example
 └── README.md
 ```
@@ -57,8 +31,7 @@ Ferramas2026/
 ## Requisitos
 
 - Python 3.9+
-- MariaDB con base de datos `ferramas` y tabla `productos` ya poblada
-- (Opcional) Cuenta de Mercado Pago para pagos reales
+- (Opcional) Cuenta de Mercado Pago sandbox para pagos de prueba
 
 ## Instalación
 
@@ -74,12 +47,7 @@ pip install -r requirements.txt
 cp .env.example .env
 # Editar .env con tus valores reales
 
-# 4. Ejecutar schema.sql en MariaDB
-# En MySQL/MariaDB CLI:
-#   USE ferramas;
-#   SOURCE database/schema.sql;
-
-# 5. Ejecutar la aplicación
+# 4. Ejecutar la aplicación (crea ferramas.db y datos de prueba automáticamente)
 python run.py
 ```
 
@@ -92,7 +60,7 @@ Copiar `.env.example` a `.env` y editar:
 | `SECRET_KEY` | Llave secreta para sesiones Flask |
 | `MP_ACCESS_TOKEN` | Access token de Mercado Pago (o dejar TEST para modo simulado) |
 | `MP_PUBLIC_KEY` | Public key de Mercado Pago |
-| `DATABASE_URL` | URL de conexión MariaDB |
+| `DATABASE_URL` | URL de conexión (default: `sqlite:///ferramas.db`) |
 | `DIVISA_CACHE_SEGUNDOS` | Tiempo de caché para tasas de cambio (default: 3600) |
 
 ## Endpoints principales
@@ -105,6 +73,7 @@ Copiar `.env.example` a `.env` y editar:
 | GET | `/api/productos/<id>` | Detalle de producto |
 | GET | `/api/productos/categoria/<nombre>` | Productos por categoría |
 | GET | `/api/categorias` | Lista de categorías únicas |
+| GET | `/api/divisas` | Tasas USD/EUR (mindicador.cl) |
 
 ### Vistas web
 

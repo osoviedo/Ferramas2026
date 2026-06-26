@@ -1,23 +1,8 @@
-# Variables de entorno locales (no subir overrides personales)
-.env.local
-.env.*.local
-!.env.example
-
-# Node.js
-node_modules/
-
-# Supabase (credenciales y archivos locales)
-supabase/.env
-.supabase/
-.env.supabase
-.env.supabase.local
-**/supabase-credentials*
-**/supabase_credentials*
-
-# Sesiones / cookies exportadas
+# Sensitive files (NO subir a GitHub)
 cookies*.txt
+.env
 
-# Base de datos local
+# Database
 *.db
 
 # Python

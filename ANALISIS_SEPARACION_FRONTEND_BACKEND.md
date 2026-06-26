@@ -44,8 +44,6 @@ Ferramas2026/
 │       ├── checkout.html
 │       ├── login.html
 │       └── ...
-├── Backend/                     # Copia alternativa (no se usa)
-├── Frontend/                    # Copia alternativa (no se usa)
 └── run.py                       # Punto de entrada
 ```
 
@@ -95,17 +93,15 @@ app.register_blueprint(carrito_bp)  # Carrito
 
 ### ✗ **Limitaciones en la Separación**
 
-#### a) **Backend Sirve el Frontend (No están completamente desacoplados)**
+#### a) **Backend sirve el frontend en el mismo proceso**
 
-En `app/__init__.py`:
+En `app/__init__.py` Flask usa las rutas por defecto (`app/templates/`, `app/static/`):
+
 ```python
-app = Flask(__name__, 
-    template_folder='../frontend/templates',    # ← Backend sirve templates
-    static_folder='../frontend/static'          # ← Backend sirve CSS/img
-)
+app = Flask(__name__)
 ```
 
-**Implicación:** 
+**Implicación:**
 - No hay separación de procesos (1 servidor Flask para todo)
 - El backend está acoplado al frontend HTML
 - Cambiar frontend requiere reiniciar backend

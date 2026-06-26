@@ -90,5 +90,27 @@ document.getElementById("selector-moneda").addEventListener("change", function()
 
 // Mantener moneda seleccionada para cuando el usuario llegue al carrito/checkout.
 localStorage.setItem("moneda_carrito", document.getElementById("selector-moneda").value);
+
+// Conversión visual de precios (tasas desde DivisaService / mindicador.cl).
+// El carrito guarda siempre el precio en CLP (data-precio-clp).
+const DIVISAS = { dolar: {{ divisas.dolar | tojson }}, euro: {{ divisas.euro | tojson }} };
+const CONVERT_TO = "{{ convert_to }}";
+
+function formatearPrecios() {
+    document.querySelectorAll(".producto-precio").forEach(function (el) {
+        const clp = parseFloat(el.dataset.precioClp);
+        if (isNaN(clp)) return;
+        if (CONVERT_TO === "USD" && DIVISAS.dolar) {
+            const v = clp / DIVISAS.dolar;
+            el.textContent = "US$ " + v.toLocaleString("es-CL", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        } else if (CONVERT_TO === "EUR" && DIVISAS.euro) {
+            const v = clp / DIVISAS.euro;
+            el.textContent = "\u20AC " + v.toLocaleString("es-CL", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        } else {
+            el.textContent = "$" + clp.toLocaleString("es-CL");
+        }
+    });
+}
+formatearPrecios();
 </script>
 {% endblock %}
