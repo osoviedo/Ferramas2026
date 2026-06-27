@@ -1,6 +1,5 @@
 """Pruebas unitarias con mock de APIs externas."""
-from unittest.mock import MagicMock, patch
-
+import responses
 import pytest
 
 from app.services.divisa_service import DivisaService
@@ -10,15 +9,14 @@ from app.services.pago_service import PagoService
 @pytest.mark.unit
 @pytest.mark.mock
 class TestDivisaServiceMock:
-    @patch("app.services.divisa_service.requests.get")
-    def test_obtener_divisas_desde_api_externa(self, mock_get, app):
-        mock_resp = MagicMock()
-        mock_resp.status_code = 200
-        mock_resp.json.return_value = {
-            "dolar": {"valor": 900},
-            "euro": {"valor": 1000},
-        }
-        mock_get.return_value = mock_resp
+    @responses.activate
+    def test_obtener_divisas_desde_api_externa(self, app):
+        responses.add(
+            responses.GET,
+            "https://mindicador.cl/api",
+            json={"dolar": {"valor": 900}, "euro": {"valor": 1000}},
+            status=200,
+        )
 
         with app.app_context():
             DivisaService._cache = {}
@@ -27,11 +25,16 @@ class TestDivisaServiceMock:
 
         assert divisas["dolar"] == 900
         assert divisas["euro"] == 1000
-        mock_get.assert_called_once()
+        assert len(responses.calls) == 1
+        assert responses.calls[0].request.url == "https://mindicador.cl/api"
 
-    @patch("app.services.divisa_service.requests.get")
-    def test_obtener_divisas_usa_valores_por_defecto_si_falla_api(self, mock_get, app):
-        mock_get.side_effect = ConnectionError("sin red")
+    @responses.activate
+    def test_obtener_divisas_usa_valores_por_defecto_si_falla_api(self, app):
+        responses.add(
+            responses.GET,
+            "https://mindicador.cl/api",
+            body=ConnectionError("sin red"),
+        )
 
         with app.app_context():
             DivisaService._cache = {}
@@ -50,9 +53,9 @@ class TestPagoServiceMock:
             app.config["MP_ACCESS_TOKEN"] = "TEST-123456789-abcdef"
             assert PagoService._es_modo_simulado() is True
 
-    @patch("app.services.pago_service.mercadopago.SDK")
-    def test_crear_preferencia_real_usa_sdk(self, mock_sdk_class, app):
-        mock_sdk = MagicMock()
+    def test_crear_preferencia_real_usa_sdk(self, mocker, app):
+        mock_sdk_class = mocker.patch("app.services.pago_service.mercadopago.SDK")
+        mock_sdk = mocker.MagicMock()
         mock_sdk.preference.return_value.create.return_value = {
             "response": {
                 "sandbox_init_point": "https://sandbox.mercadopago.cl/checkout",

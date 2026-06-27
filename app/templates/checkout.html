@@ -90,6 +90,17 @@
 
         <h4 class="text-white mb-3"><i class="ti ti-credit-card"></i> Método de pago</h4>
 
+        {% if dev_auto_login and mp_test_buyer_user %}
+        <div style="background:rgba(55,138,221,0.1); border:0.5px solid rgba(55,138,221,0.25); border-radius:10px; padding:14px 16px; margin-bottom:16px;">
+            <p style="color:rgba(255,255,255,0.75); font-size:13px; margin:0;">
+                <i class="ti ti-test-pipe"></i> <strong>Modo demo:</strong> sesión iniciada como cliente demo.
+                Al pagar con Mercado Pago usa la cuenta sandbox
+                <code style="color:#e8601a;">{{ mp_test_buyer_user }}</code>
+                (no tu cuenta personal).
+            </p>
+        </div>
+        {% endif %}
+
         <div class="mb-3">
             <div class="form-check" style="background:rgba(255,255,255,0.05); border-radius:8px; padding:12px 16px; margin-bottom:8px;">
                 <input class="form-check-input" type="radio" name="metodo_pago" id="mpago" value="mercadopago" checked

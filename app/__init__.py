@@ -52,6 +52,34 @@ def create_app():
     app.register_blueprint(bodeguero_bp)
     app.register_blueprint(admin_bp)
 
+    @app.before_request
+    def _dev_auto_login():
+        """Inicia sesión demo en localhost cuando DEV_AUTO_LOGIN=true."""
+        if not app.config.get('DEV_AUTO_LOGIN'):
+            return
+        from flask import request
+        from flask_login import current_user, login_user
+        from app.services.auth_service import AuthService
+
+        if current_user.is_authenticated:
+            return
+        if request.endpoint in (None, 'static', 'auth.logout'):
+            return
+        user, _ = AuthService.login(
+            app.config['DEV_LOGIN_EMAIL'],
+            app.config['DEV_LOGIN_PASSWORD'],
+        )
+        if user:
+            login_user(user)
+
+    @app.context_processor
+    def _inject_dev_context():
+        return {
+            'dev_auto_login': app.config.get('DEV_AUTO_LOGIN', False),
+            'mp_test_buyer_user': app.config.get('MP_TEST_BUYER_USER', ''),
+            'mp_test_buyer_password': app.config.get('MP_TEST_BUYER_PASSWORD', ''),
+        }
+
     with app.app_context():
         db.create_all()
         _seed_data()

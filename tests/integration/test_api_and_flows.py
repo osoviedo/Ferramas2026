@@ -1,6 +1,4 @@
 """Pruebas de integración: API REST + flujos entre módulos."""
-from unittest.mock import patch
-
 import pytest
 
 from app.models.producto import Producto
@@ -34,8 +32,8 @@ class TestApiProductos:
         assert r.status_code == 404
 
     @pytest.mark.mock
-    @patch("app.api.producto_api.DivisaService")
-    def test_api_productos_conversion_usd(self, mock_ds_class, client):
+    def test_api_productos_conversion_usd(self, mocker, client):
+        mock_ds_class = mocker.patch("app.api.producto_api.DivisaService")
         mock_ds_class.return_value.obtener_divisas.return_value = {
             "dolar": 1000,
             "euro": 1100,

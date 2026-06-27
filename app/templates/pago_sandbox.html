@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+    <h1>Pago sandbox</h1>
+    <p>Pedido #{{ pedido_id }}</p>
+</section>
+
+<div style="max-width:640px; margin:0 auto; padding: 0 32px 40px;">
+    <div style="background:rgba(55,138,221,0.12); border:0.5px solid rgba(55,138,221,0.3); border-radius:14px; padding:28px;">
+        <h4 class="text-white mb-3"><i class="ti ti-test-pipe"></i> Cuenta de prueba Mercado Pago</h4>
+        <p style="color:rgba(255,255,255,0.65); font-size:14px; margin-bottom:16px;">
+            En la pantalla de Mercado Pago usa esta cuenta de comprador de prueba
+            (no tu cuenta personal). También puedes pagar como invitado con tarjeta de prueba
+            <strong style="color:#fff;">APRO</strong>.
+        </p>
+        <table style="color:rgba(255,255,255,0.85); font-size:14px; width:100%; margin-bottom:20px;">
+            <tr>
+                <td style="padding:6px 12px 6px 0; color:rgba(255,255,255,0.5);">Usuario:</td>
+                <td><code style="color:#e8601a;">{{ mp_test_buyer_user }}</code></td>
+            </tr>
+            <tr>
+                <td style="padding:6px 12px 6px 0; color:rgba(255,255,255,0.5);">Clave:</td>
+                <td><code style="color:#e8601a;">{{ mp_test_buyer_password }}</code></td>
+            </tr>
+        </table>
+        <a href="{{ init_point }}" class="btn btn-lg w-100" style="background:#e8601a; color:#fff; font-weight:500; border-radius:8px; padding:12px;">
+            <i class="ti ti-external-link"></i> Continuar a Mercado Pago sandbox
+        </a>
+        <p class="text-center mt-3 mb-0" style="color:rgba(255,255,255,0.45); font-size:12px;">
+            Modo demo activo — solo en desarrollo local
+        </p>
+    </div>
+</div>
+
+{% endblock %}

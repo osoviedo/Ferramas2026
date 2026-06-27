@@ -10,3 +10,5 @@ python-dotenv
 pytest
 pytest-cov
 pytest-html
+pytest-mock
+responses

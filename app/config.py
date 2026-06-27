@@ -27,3 +27,10 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME', '')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', '')
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER', 'noreply@ferramas.cl')
+
+    # Demo local: auto-login Ferramas + credenciales comprador MP sandbox
+    DEV_AUTO_LOGIN = os.environ.get('DEV_AUTO_LOGIN', 'false').lower() == 'true'
+    DEV_LOGIN_EMAIL = os.environ.get('DEV_LOGIN_EMAIL', 'cliente@ferramas.cl')
+    DEV_LOGIN_PASSWORD = os.environ.get('DEV_LOGIN_PASSWORD', 'cliente123')
+    MP_TEST_BUYER_USER = os.environ.get('MP_TEST_BUYER_USER', '')
+    MP_TEST_BUYER_PASSWORD = os.environ.get('MP_TEST_BUYER_PASSWORD', '')

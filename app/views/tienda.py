@@ -79,6 +79,17 @@ def pago_iniciar(pedido_id):
         error_mp = result.get('error', 'No se pudo iniciar el pago en Mercado Pago.')
         flash(f'No se pudo iniciar el pago en Mercado Pago. Detalle: {error_mp}', 'danger')
         return redirect(url_for('tienda.checkout'))
+
+    from flask import current_app
+    if (
+        current_app.config.get('DEV_AUTO_LOGIN')
+        and current_app.config.get('MP_TEST_BUYER_USER')
+    ):
+        return render_template(
+            'pago_sandbox.html',
+            init_point=init_point,
+            pedido_id=pedido_id,
+        )
     return redirect(init_point)
 
 
