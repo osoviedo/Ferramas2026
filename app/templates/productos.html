@@ -18,7 +18,7 @@
 <section class="productos-grid">
     {% if productos %}
     {% for p in productos %}
-    <div class="producto-card">
+    <div class="producto-card" data-producto-id="{{ p.id }}">
         <div class="producto-imagen">
             <img src="{{ url_for('static', filename='img/Productos/' + p.imagen) }}"
                  alt="{{ p.nombre }}"
@@ -29,13 +29,14 @@
         </div>
         <h3>{{ p.nombre }}</h3>
         <p class="producto-precio" data-precio-clp="{{ p.precio }}">${{ p.precio }}</p>
-        <p class="producto-stock">
+        <p class="producto-stock" data-stock-id="{{ p.id }}">
             <i class="ti ti-package" style="font-size:13px;"></i>
-            Stock: {{ p.stock }} unidades
+            Stock: <span class="stock-cantidad">{{ p.stock }}</span> unidades
         </p>
-        <button class="btn-agregar" onclick="agregarAlCarrito({{ p.id }}, '{{ p.nombre }}', {{ p.precio }}, this)">
+        <button class="btn-agregar" onclick="agregarAlCarrito({{ p.id }}, '{{ p.nombre }}', {{ p.precio }}, this)"
+                {% if p.stock <= 0 %}disabled style="opacity:0.5; cursor:not-allowed;"{% endif %}>
             <i class="ti ti-shopping-cart-plus"></i>
-            Agregar al carrito
+            {% if p.stock <= 0 %}Sin stock{% else %}Agregar al carrito{% endif %}
         </button>
     </div>
     {% endfor %}
@@ -51,29 +52,86 @@
 
 {% block scripts %}
 <script>
-// Carrito localStorage
-function agregarAlCarrito(id, nombre, precio, btn) {
+// Carrito localStorage + stock vía API
+function actualizarStockUI(productoId, stock) {
+    const stockEl = document.querySelector(`[data-stock-id="${productoId}"] .stock-cantidad`);
+    if (stockEl) stockEl.textContent = stock;
+    const card = document.querySelector(`[data-producto-id="${productoId}"]`);
+    const btn = card ? card.querySelector(".btn-agregar") : null;
+    if (btn) {
+        if (stock <= 0) {
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+            btn.style.cursor = "not-allowed";
+            btn.innerHTML = '<i class="ti ti-shopping-cart-off"></i> Sin stock';
+        } else {
+            btn.disabled = false;
+            btn.style.opacity = "";
+            btn.style.cursor = "";
+            btn.innerHTML = '<i class="ti ti-shopping-cart-plus"></i> Agregar al carrito';
+        }
+    }
+}
+
+async function agregarAlCarrito(id, nombre, precio, btn) {
     let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     let existe = carrito.find(p => p.id === id);
+    const cantidadAnterior = existe ? existe.cantidad : 0;
+
     if (existe) {
         existe.cantidad++;
     } else {
         carrito.push({ id, nombre, precio, cantidad: 1 });
     }
     localStorage.setItem("carrito", JSON.stringify(carrito));
-    actualizarContador();
 
-    // Sincronizar con BD
-    fetch("{{ url_for('carrito.agregar') }}", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ producto_id: id, cantidad: 1 })
-    }).catch(() => {});
+    try {
+        const resp = await fetch("{{ url_for('carrito.agregar') }}", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ producto_id: id, cantidad: 1 })
+        });
+        const data = await resp.json();
 
-    btn.innerHTML = '<i class="ti ti-check"></i> Agregado';
-    setTimeout(() => {
-        btn.innerHTML = '<i class="ti ti-shopping-cart-plus"></i> Agregar al carrito';
-    }, 1500);
+        if (!resp.ok || !data.ok) {
+            if (existe) {
+                existe.cantidad = cantidadAnterior;
+                if (existe.cantidad <= 0) {
+                    carrito = carrito.filter(p => p.id !== id);
+                }
+            } else {
+                carrito = carrito.filter(p => p.id !== id);
+            }
+            localStorage.setItem("carrito", JSON.stringify(carrito));
+            actualizarContador();
+            alert(data.error || "No se pudo agregar al carrito");
+            if (typeof data.stock === "number") {
+                actualizarStockUI(id, data.stock);
+            }
+            return;
+        }
+
+        actualizarStockUI(id, data.stock);
+        actualizarContador();
+        btn.innerHTML = '<i class="ti ti-check"></i> Agregado';
+        setTimeout(() => {
+            if (!btn.disabled) {
+                btn.innerHTML = '<i class="ti ti-shopping-cart-plus"></i> Agregar al carrito';
+            }
+        }, 1500);
+    } catch (_) {
+        if (existe) {
+            existe.cantidad = cantidadAnterior;
+            if (existe.cantidad <= 0) {
+                carrito = carrito.filter(p => p.id !== id);
+            }
+        } else {
+            carrito = carrito.filter(p => p.id !== id);
+        }
+        localStorage.setItem("carrito", JSON.stringify(carrito));
+        actualizarContador();
+        alert("Error de conexión al actualizar stock");
+    }
 }
 
 // Selector de moneda

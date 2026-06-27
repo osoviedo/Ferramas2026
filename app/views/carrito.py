@@ -10,6 +10,18 @@ from app.services.pago_service import PagoService
 carrito_bp = Blueprint('carrito', __name__, url_prefix='/carrito')
 
 
+def _respuesta_producto(producto, ok=True, error=None):
+    payload = {
+        'ok': ok,
+        'producto_id': producto.id,
+        'nombre': producto.nombre,
+        'stock': producto.stock,
+    }
+    if error:
+        payload['error'] = error
+    return payload
+
+
 @carrito_bp.route('/')
 def ver_carrito():
     return render_template('carrito.html')
@@ -17,17 +29,26 @@ def ver_carrito():
 
 @carrito_bp.route('/agregar', methods=['POST'])
 def agregar():
-    data = request.get_json()
+    data = request.get_json() or {}
     producto_id = data.get('producto_id')
-    cantidad = data.get('cantidad', 1)
+    cantidad = int(data.get('cantidad', 1))
+    if cantidad < 1:
+        return jsonify({'ok': False, 'error': 'Cantidad inválida'}), 400
+
     producto = Producto.query.get_or_404(producto_id)
+    if producto.stock < cantidad:
+        return jsonify(_respuesta_producto(
+            producto, ok=False, error='Stock insuficiente'
+        )), 400
+
+    producto.stock -= cantidad
 
     if current_user.is_authenticated:
         carrito = Carrito.query.filter_by(usuario_id=current_user.id).first()
         if not carrito:
             carrito = Carrito(usuario_id=current_user.id)
             db.session.add(carrito)
-            db.session.commit()
+            db.session.flush()
         item = CarritoProducto.query.filter_by(
             carrito_id=carrito.id, producto_id=producto_id
         ).first()
@@ -38,30 +59,17 @@ def agregar():
                 carrito_id=carrito.id, producto_id=producto_id, cantidad=cantidad
             )
             db.session.add(item)
-        db.session.commit()
 
-    return jsonify({'ok': True, 'nombre': producto.nombre})
+    db.session.commit()
+    return jsonify(_respuesta_producto(producto))
 
 
 @carrito_bp.route('/eliminar', methods=['POST'])
 def eliminar():
-    data = request.get_json()
+    data = request.get_json() or {}
     producto_id = data.get('producto_id')
-    if current_user.is_authenticated:
-        carrito = Carrito.query.filter_by(usuario_id=current_user.id).first()
-        if carrito:
-            CarritoProducto.query.filter_by(
-                carrito_id=carrito.id, producto_id=producto_id
-            ).delete()
-            db.session.commit()
-    return jsonify({'ok': True})
+    cantidad_devolver = int(data.get('cantidad', 0))
 
-
-@carrito_bp.route('/actualizar', methods=['POST'])
-def actualizar():
-    data = request.get_json()
-    producto_id = data.get('producto_id')
-    cantidad = data.get('cantidad', 1)
     if current_user.is_authenticated:
         carrito = Carrito.query.filter_by(usuario_id=current_user.id).first()
         if carrito:
@@ -69,9 +77,60 @@ def actualizar():
                 carrito_id=carrito.id, producto_id=producto_id
             ).first()
             if item:
-                item.cantidad = cantidad
+                cantidad_devolver = item.cantidad
+                db.session.delete(item)
+
+    producto = Producto.query.get(producto_id)
+    if producto and cantidad_devolver > 0:
+        producto.stock += cantidad_devolver
+
+    db.session.commit()
+    if producto:
+        return jsonify(_respuesta_producto(producto))
+    return jsonify({'ok': True, 'producto_id': producto_id})
+
+
+@carrito_bp.route('/actualizar', methods=['POST'])
+def actualizar():
+    data = request.get_json() or {}
+    producto_id = data.get('producto_id')
+    nueva_cantidad = max(1, int(data.get('cantidad', 1)))
+    cantidad_anterior = int(data.get('cantidad_anterior', 0))
+
+    producto = Producto.query.get_or_404(producto_id)
+
+    if current_user.is_authenticated:
+        carrito = Carrito.query.filter_by(usuario_id=current_user.id).first()
+        if carrito:
+            item = CarritoProducto.query.filter_by(
+                carrito_id=carrito.id, producto_id=producto_id
+            ).first()
+            if item:
+                cantidad_anterior = item.cantidad
+                delta = nueva_cantidad - cantidad_anterior
+                if delta > 0:
+                    if producto.stock < delta:
+                        return jsonify(_respuesta_producto(
+                            producto, ok=False, error='Stock insuficiente'
+                        )), 400
+                    producto.stock -= delta
+                elif delta < 0:
+                    producto.stock += abs(delta)
+                item.cantidad = nueva_cantidad
                 db.session.commit()
-    return jsonify({'ok': True})
+                return jsonify(_respuesta_producto(producto))
+
+    delta = nueva_cantidad - cantidad_anterior
+    if delta > 0:
+        if producto.stock < delta:
+            return jsonify(_respuesta_producto(
+                producto, ok=False, error='Stock insuficiente'
+            )), 400
+        producto.stock -= delta
+    elif delta < 0:
+        producto.stock += abs(delta)
+    db.session.commit()
+    return jsonify(_respuesta_producto(producto))
 
 
 @carrito_bp.route('/sincronizar', methods=['POST'])

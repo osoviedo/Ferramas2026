@@ -1,0 +1,708 @@
+﻿=== ESTILOS InfoBlue / AZUL en styles.xml ===
+  id=Textoindependiente2, name=Body Text 2, color=0000FF
+  id=Sangradetextonormal, name=Body Text Indent, color=0000FF
+  id=InfoBlue, name=InfoBlue, color=0000FF
+  id=Hipervnculo, name=Hyperlink, color=0000FF
+  id=Sangra2detindependiente, name=Body Text Indent 2, color=0000FF
+  id=Sangra3detindependiente, name=Body Text Indent 3, color=0000FF
+  id=infoblue0, name=infoblue, color=0000FF
+
+=== FRAGMENTOS AZUL / GU═A (91) ===
+
+2. [color=00B050]
+   [Nombre del proyecto]
+
+4. [color=00B050]
+   [dd/mm/aaa]
+
+5. [color=0000FF]
+   Resumen de todo el contenido del plan de pruebas de software, describe cußl es su prop¾sito, establece si es un plan maestro o un plan detallado, identifica el alcance del plan de pruebas en relaci¾n con el plan de proyecto de software, restricciones (por
+
+6. [color=0000FF]
+   ejemplo
+
+7. [color=0000FF]
+   de recursos o presupuesto), alcance del esfuerzo de pruebas entre otros aspectos.
+
+8. [color=0000FF]
+   El testing se±alado e
+
+9. [color=0000FF]
+   s
+
+10. [color=0000FF]
+   de
+
+11. [color=0000FF]
+   l
+
+12. [color=0000FF]
+   t
+
+13. [color=0000FF]
+   ipo ôCaja Negraö.  Este tipo de pruebas
+
+14. [color=0000FF]
+   busca
+
+16. [color=0000FF]
+   comprobar
+
+17. [color=0000FF]
+   el comportamiento de
+
+18. [color=0000FF]
+   un componente
+
+19. [color=0000FF]
+   ,
+
+20. [color=0000FF]
+   sin inspeccionar sus detalles internos
+
+21. [color=0000FF]
+   .
+
+22. [color=0000FF]
+   Con esta finalidad se utilizan datos de entrada
+
+23. [color=0000FF]
+   (input
+
+24. [color=0000FF]
+   ), se ejecuta un componente de software y se obtiene
+
+25. [color=0000FF]
+   un resultado (output).
+
+26. [color=0000FF]
+   [
+
+27. [color=0000FF]
+   Se proponen varios tipos de
+
+28. [color=0000FF]
+   p
+
+29. [color=0000FF]
+   ruebas,
+
+30. [color=0000FF]
+   d
+
+31. [color=0000FF]
+   e los cuales la
+
+32. [color=0000FF]
+   O
+
+33. [color=0000FF]
+   rganizaci¾n aplicarß
+
+34. [color=0000FF]
+   los que consider
+
+35. [color=0000FF]
+   e
+
+36. [color=0000FF]
+   necesarios y suficientes.
+
+37. [color=0000FF]
+   ]
+
+38. [color=0000FF]
+   [
+
+39. [color=0000FF]
+   La siguiente
+
+40. [color=0000FF]
+   tabla contiene algunos ejemplos.]
+
+41. [color=0000FF]
+   [
+
+42. [color=0000FF]
+   La siguiente tabla
+
+43. [color=0000FF]
+   corresponde a un ejemplo de
+
+44. [color=0000FF]
+   identifica
+
+45. [color=0000FF]
+   ci¾n de los recursos
+
+46. [color=0000FF]
+   de sistema necesarios para el t
+
+47. [color=0000FF]
+   esting.]
+
+48. [color=0000FF]
+   Pentium II 300 MHz o superior
+
+49. [color=0000FF]
+   64 MB (128 MB ideal)
+
+50. [color=0000FF]
+   600 MB
+
+51. [color=0000FF]
+   SVGA .28 I 800x600
+
+52. [color=0000FF]
+   1.44 MB
+
+53. [color=0000FF]
+   Rational TeamTest compuesta por Robot, ClearQuest TT, Test Manager
+
+54. [color=0000FF]
+   Rational Rose 2000
+
+55. [color=0000FF]
+   Access
+
+56. [color=0000FF]
+   Microsoft Explorer
+
+57. [color=0000FF]
+   Microsoft Office
+
+58. [color=0000FF]
+   <
+
+59. [color=0000FF]
+   Incluir diagrama de la
+
+60. [color=0000FF]
+   arqui
+
+61. [color=0000FF]
+   tectura del
+
+62. [color=0000FF]
+   A
+
+63. [color=0000FF]
+   mbie
+
+64. [color=0000FF]
+   nte de
+
+65. [color=0000FF]
+   prueba
+
+66. [color=0000FF]
+   s
+
+67. [color=0000FF]
+   >
+
+68. [color=0000FF]
+   <nombre de cliente>
+
+69. [color=0000FF]
+   <Indicar fecha testigo para obtenci¾n de
+
+70. [color=0000FF]
+   datos>
+
+71. [color=0000FF]
+   [Esp
+
+72. [color=0000FF]
+   ecifica el criterio que se usarß
+
+73. [color=0000FF]
+   para
+
+74. [color=0000FF]
+   determinar si la ejecuci¾n del
+
+75. [color=0000FF]
+   ôPlan
+
+76. [color=0000FF]
+   de pruebas
+
+77. [color=0000FF]
+   ö
+
+79. [color=0000FF]
+   puede comenzar
+
+80. [color=0000FF]
+   .
+
+81. [color=0000FF]
+   ]
+
+82. [color=0000FF]
+   [Esp
+
+83. [color=0000FF]
+   ecifica el criterio que se usarß
+
+84. [color=0000FF]
+   para determinar si la ejecuci¾n del
+
+86. [color=0000FF]
+   ôPlan
+
+87. [color=0000FF]
+   de pruebas
+
+88. [color=0000FF]
+   ö
+
+89. [color=0000FF]
+   se ha completado o si continua en ejecuci¾n
+
+90. [color=0000FF]
+   .
+
+91. [color=0000FF]
+   ]
+
+=== TEXTO AZUL COMPLETO (concatenado) ===
+
+[Nombre del proyecto] [dd/mm/aaa] Resumen de todo el contenido del plan de pruebas de software, describe cußl es su prop¾sito, establece si es un plan maestro o un plan detallado, identifica el alcance del plan de pruebas en relaci¾n con el plan de proyecto de software, restricciones (por ejemplo de recursos o presupuesto), alcance del esfuerzo de pruebas entre otros aspectos. El testing se±alado e s de l t ipo ôCaja Negraö.  Este tipo de pruebas busca comprobar el comportamiento de un componente , sin inspeccionar sus detalles internos . Con esta finalidad se utilizan datos de entrada (input ), se ejecuta un componente de software y se obtiene un resultado (output). [ Se proponen varios tipos de p ruebas, d e los cuales la O rganizaci¾n aplicarß los que consider e necesarios y suficientes. ] [ La siguiente tabla contiene algunos ejemplos.] [ La siguiente tabla corresponde a un ejemplo de identifica ci¾n de los recursos de sistema necesarios para el t esting.] Pentium II 300 MHz o superior 64 MB (128 MB ideal) 600 MB SVGA .28 I 800x600 1.44 MB Rational TeamTest compuesta por Robot, ClearQuest TT, Test Manager Rational Rose 2000 Access Microsoft Explorer Microsoft Office < Incluir diagrama de la arqui tectura del A mbie nte de prueba s > <nombre de cliente> <Indicar fecha testigo para obtenci¾n de datos> [Esp ecifica el criterio que se usarß para determinar si la ejecuci¾n del ôPlan de pruebas ö puede comenzar . ] [Esp ecifica el criterio que se usarß para determinar si la ejecuci¾n del ôPlan de pruebas ö se ha completado o si continua en ejecuci¾n . ]
+
+
+=== P┴RRAFOS COMPLETOS DEL DOCUMENTO (negro + tÝtulos) ===
+
+Plan de pruebas de software [TITULO/CONTENIDO]
+Fecha:
+[Esta plantilla tiene por finalidad servir de base para la confecci¾n del documento ôPlan de Pruebasö. El texto entre parÚntesis cuadrados y desplegado en azul itßlico (estilo = InfoBlue) tiene por finalidad guiar al autor y debe ser borrado antes de la publicaci¾n del documento.] [TITULO/CONTENIDO]
+Historia de Revisiones [TITULO/CONTENIDO]
+Fecha [TITULO/CONTENIDO]
+Versi¾n [TITULO/CONTENIDO]
+Descripci¾n [TITULO/CONTENIDO]
+Autor [TITULO/CONTENIDO]
+<aaaa-mm-dd> [TITULO/CONTENIDO]
+<1.1.0> [TITULO/CONTENIDO]
+Documento inicial [TITULO/CONTENIDO]
+<Nombre> [TITULO/CONTENIDO]
+Tabla de Contenidos [TITULO/CONTENIDO]
+1Introducci¾n6 [TITULO/CONTENIDO]
+1.1Resumen ejecutivo6 [TITULO/CONTENIDO]
+1.2Alcance de las pruebas6 [TITULO/CONTENIDO]
+1.2.1Elementos de pruebas6 [TITULO/CONTENIDO]
+1.2.2Pruebas funcionales6 [TITULO/CONTENIDO]
+1.2.3Riesgos6 [TITULO/CONTENIDO]
+1.3Definiciones, acr¾nimos y abreviaciones8 [TITULO/CONTENIDO]
+1.4Referencias8 [TITULO/CONTENIDO]
+2Requerimientos para pruebas9 [TITULO/CONTENIDO]
+2.1Casos de uso9 [TITULO/CONTENIDO]
+2.1.1Vista global9 [TITULO/CONTENIDO]
+2.1.2Caso de uso 19 [TITULO/CONTENIDO]
+2.1.3Caso de uso 29 [TITULO/CONTENIDO]
+2.1.4Caso de uso 39 [TITULO/CONTENIDO]
+2.2Requerimientos funcionales9 [TITULO/CONTENIDO]
+2.2.1Componentes comunes9 [TITULO/CONTENIDO]
+2.2.2Componente 19 [TITULO/CONTENIDO]
+2.2.3Componente 29 [TITULO/CONTENIDO]
+2.3Requerimientos No-Funcionales (Matriz con Input/Output, solo si aplica)9 [TITULO/CONTENIDO]
+2.3.1Componente 1 (puede tener uno o mßs casos de uso)9 [TITULO/CONTENIDO]
+2.3.2Componente 2 (puede tener uno o mßs casos de uso)9 [TITULO/CONTENIDO]
+3Estrategia de Pruebas10 [TITULO/CONTENIDO]
+3.1Tipos de pruebas10 [TITULO/CONTENIDO]
+3.1.1Pruebas funcionales10 [TITULO/CONTENIDO]
+3.1.2Pruebas de rendimiento (Performance)11 [TITULO/CONTENIDO]
+3.1.3Pruebas de seguridad y de acceso a datos11 [TITULO/CONTENIDO]
+3.1.4Herramientas involucradas11 [TITULO/CONTENIDO]
+4Recursos12 [TITULO/CONTENIDO]
+4.1Profesionales12 [TITULO/CONTENIDO]
+4.2Ambiente de pruebas13 [TITULO/CONTENIDO]
+4.2.1Preparaci¾n del ambiente de pruebas13 [TITULO/CONTENIDO]
+4.2.2Dise±o del ambiente de pruebas13 [TITULO/CONTENIDO]
+4.2.3Dise±o ambiente de pruebas15 [TITULO/CONTENIDO]
+4.2.4Integraci¾n del ambiente de pruebas y configuraci¾n16 [TITULO/CONTENIDO]
+4.2.5Generaci¾n de datos16 [TITULO/CONTENIDO]
+5Actividades e Hitos del Plan de Pruebas16 [TITULO/CONTENIDO]
+6Entregables19 [TITULO/CONTENIDO]
+6.1Plan de pruebas19 [TITULO/CONTENIDO]
+6.1.1Criterio de entrada para el ôPlan de pruebasö19 [TITULO/CONTENIDO]
+6.1.2Criterio de salida para el ôPlan de pruebasö19 [TITULO/CONTENIDO]
+6.1.3Criterio de suspensi¾n y resumisi¾n19 [TITULO/CONTENIDO]
+6.2Resultados de las pruebas19 [TITULO/CONTENIDO]
+6.3Reporte de defectos19 [TITULO/CONTENIDO]
+7Anexos20 [TITULO/CONTENIDO]
+7.1A: Tareas del proyecto20 [TITULO/CONTENIDO]
+7.2B: Pruebas de rendimiento (performance)21 [TITULO/CONTENIDO]
+7.3C: Pruebas de seguridad y de control de acceso22 [TITULO/CONTENIDO]
+Introducci¾n [TITULO/CONTENIDO]
+Resumen ejecutivo [TITULO/CONTENIDO]
+Alcance de las pruebas [TITULO/CONTENIDO]
+Elementos de pruebas [TITULO/CONTENIDO]
+Listado de todos los m¾dulos, componentes o elementos que se van a probar. Si es de alto nivel, se listan las ßreas funcionales (m¾dulos o procesos que cubre el Testing), por otro lado, si es de un nivel detallado se listan los programas, unidades o m¾dulos. [TITULO/CONTENIDO]
+Pruebas funcionales [TITULO/CONTENIDO]
+Los datos de entrada son los utilizados por las transacciones involucradas. Cada argumento de entrada puede seleccionar uno de los siguientes datos de prueba, dependiendo este del resultado que se desea obtener (esperado), verificando asÝ el comportamiento del componente a probar usando distintos valores de entrada: [TITULO/CONTENIDO]
+Valores normales para cada transacci¾n. [TITULO/CONTENIDO]
+Valores lÝmites para cada transacci¾n. [TITULO/CONTENIDO]
+Valores de borde. [TITULO/CONTENIDO]
+Valores ilegales. [TITULO/CONTENIDO]
+Riesgos [TITULO/CONTENIDO]
+Algunos riesgos comunes a considerar son: [TITULO/CONTENIDO]
+Documentaci¾n de especificaci¾n err¾nea o incompleta. [TITULO/CONTENIDO]
+Lista de requerimientos inconsistente con los casos de uso. [TITULO/CONTENIDO]
+Componentes a probar y componentes comunes correspondan a distintas versiones. [TITULO/CONTENIDO]
+Hardware y software no funcionen correctamente. [TITULO/CONTENIDO]
+Herramientas de testing automatizado estÚn mal configuradas. [TITULO/CONTENIDO]
+Los riesgos serßn identificados de acuerdo a un concepto de Bajo, Medio o Alto, dependiendo de la importancia del caso de uso para el cual se estß desarrollando el testing. [TITULO/CONTENIDO]
+AsÝ mismo, se han identificado una serie de riesgos (calificados entre 1 y 10 dependiendo de su gravedad) los que estßn detallados en el artefacto ôLista de riesgosö con sus alcances y acciones, en el presente plan, son enunciados para sugerir algunas acciones. [TITULO/CONTENIDO]
+Matrices de riesgos [TITULO/CONTENIDO]
+Pruebas [TITULO/CONTENIDO]
+N║ Riesgo [TITULO/CONTENIDO]
+Descripci¾n [TITULO/CONTENIDO]
+Gravedad [TITULO/CONTENIDO]
+Acci¾n [TITULO/CONTENIDO]
+1 [TITULO/CONTENIDO]
+2 [TITULO/CONTENIDO]
+3 [TITULO/CONTENIDO]
+4 [TITULO/CONTENIDO]
+5 [TITULO/CONTENIDO]
+6 [TITULO/CONTENIDO]
+Definiciones, acr¾nimos y abreviaciones [TITULO/CONTENIDO]
+[Esta subsecci¾n provee las definiciones de todos los tÚrminos, acr¾nimos, y abreviaciones requeridas para interpretar correctamente el documento. Esta informaci¾n puede entregarse a modo de referencia a documento ôGlosarioö del proyecto.] [TITULO/CONTENIDO]
+Referencias [TITULO/CONTENIDO]
+[Esta subsecci¾n provee una lista completa de todos los documentos referenciados en cualquier parte de este artefacto. Cada documento debe ser identificado por tÝtulo, edici¾n/versi¾n, fecha, autor y nombre de archivo. Especificar las fuentes de donde se pueden obtener estas referencias. Esta informaci¾n puede ser entregada como referencia a un apÚndice o a otro documento.] [TITULO/CONTENIDO]
+Requerimientos para pruebas [TITULO/CONTENIDO]
+La siguiente lista identifica los Ýtems (casos de uso, requerimientos funcionales y requerimientos no funcionales) que se han identificado como requerimientos a ser probados. [TITULO/CONTENIDO]
+Casos de uso [TITULO/CONTENIDO]
+Vista global [TITULO/CONTENIDO]
+[Agregar o eliminar seg·n corresponda] [TITULO/CONTENIDO]
+Caso de uso 1 [TITULO/CONTENIDO]
+Caso de uso 2 [TITULO/CONTENIDO]
+Caso de uso 3 [TITULO/CONTENIDO]
+Requerimientos funcionales [TITULO/CONTENIDO]
+Componentes comunes [TITULO/CONTENIDO]
+[Agregar o eliminar seg·n corresponda] [TITULO/CONTENIDO]
+Componente 1 [TITULO/CONTENIDO]
+Componente 2 [TITULO/CONTENIDO]
+Requerimientos No-Funcionales (Matriz con Input/Output, solo si aplica) [TITULO/CONTENIDO]
+Componente 1 (puede tener uno o mßs casos de uso) [TITULO/CONTENIDO]
+Nro [TITULO/CONTENIDO]
+Caso de Uso [TITULO/CONTENIDO]
+Input [TITULO/CONTENIDO]
+Output [TITULO/CONTENIDO]
+1 [TITULO/CONTENIDO]
+Componente 2 (puede tener uno o mßs casos de uso) [TITULO/CONTENIDO]
+Nro [TITULO/CONTENIDO]
+Caso de Uso [TITULO/CONTENIDO]
+Input [TITULO/CONTENIDO]
+Output [TITULO/CONTENIDO]
+Estrategia de Pruebas [TITULO/CONTENIDO]
+[A continuaci¾n se describe la estrategia de testing a ser utilizada, en otras palabras, se indica c¾mo se realizarß el testing de los requerimientos analizados en la secci¾n precedente (Requerimientos para pruebas) que identifica quÚ se va a testear.] [TITULO/CONTENIDO]
+Tipos de pruebas [TITULO/CONTENIDO]
+Pruebas funcionales [TITULO/CONTENIDO]
+El testing funcional se realizarß sobre los requerimientos funcionales antes descritos y sus casos de uso. Estas pruebas tienen por finalidad comprobar la funcionalidad de la aplicaci¾n a partir de datos vßlidamente seleccionados sobre las transacciones del sistema. [TITULO/CONTENIDO]
+Este tipo de comprobaci¾n se basa en las tÚcnicas de caja negra, que permiten probar la aplicaci¾n (y sus procesos interinos) vÝa GUI. [TITULO/CONTENIDO]
+Objetivo de la prueba: [TITULO/CONTENIDO]
+Asegurar la funcionalidad del conjunto de casos, incluyendo la navegaci¾n en la aplicaci¾n, el ingreso de datos, el proceso y la recuperaci¾n (resultados). [TITULO/CONTENIDO]
+Que la navegaci¾n a travÚs de los casos de prueba refleje apropiadamente las reglas del negocio y los requerimientos, incluyendo ventana a ventana,  campo a campo y usando los mÚtodos de acceso correctamente (tecla tab, movimiento del mouse, etc.) [TITULO/CONTENIDO]
+Que los objetos de las ventanas y sus caracterÝsticas, tales como men·s, tama±o, posici¾n, estados y foco, estÚn de acuerdo a los estßndares. [TITULO/CONTENIDO]
+TÚcnica a utilizar: [TITULO/CONTENIDO]
+Ejecutar cada caso de uso, su flujo y funcionalidad usando tanto datos vßlidos como invßlidos para comprobar lo siguiente: [TITULO/CONTENIDO]
+Que los resultados esperados ocurren cuando los datos vßlidos son utilizados. [TITULO/CONTENIDO]
+Que el mensaje de error es apropiado cuando se utilizan datos invßlidos. [TITULO/CONTENIDO]
+Que cada regla de negocio se utiliza apropiadamente. [TITULO/CONTENIDO]
+Crear y modificar los procedimientos de prueba para cada ventana, para comprobar los estados de los objetos y de la aplicaci¾n. [TITULO/CONTENIDO]
+Criterio de validaci¾n: [TITULO/CONTENIDO]
+Todas las pruebas planificadas se ejecutaron correctamente. [TITULO/CONTENIDO]
+Todos los defectos identificados han sido asignados. [TITULO/CONTENIDO]
+Cada ventana debe ser verificada para mantener la consistencia con la versi¾n maestra y comprobar que estÚ dentro de los estßndares aceptables. [TITULO/CONTENIDO]
+Consideraciones especiales: [TITULO/CONTENIDO]
+[Puede que no todas las propiedades sean verificadas, considerar las mßs importantes y/o definidas y no incluir todos los objetos de terceras partes.] [TITULO/CONTENIDO]
+Observaciones: [TITULO/CONTENIDO]
+Pruebas de rendimiento (Performance) [TITULO/CONTENIDO]
+Un detalle de este tipo de testing, adjunta en el Anexo B de este documento. [TITULO/CONTENIDO]
+Pruebas de seguridad y de acceso a datos [TITULO/CONTENIDO]
+Un detalle de este tipo de testing, adjunta en el Anexo C de este documento. [TITULO/CONTENIDO]
+Herramientas involucradas [TITULO/CONTENIDO]
+[Esta secci¾n es solo opcional y aplica en el caso que se utilicen herramientas de testing.] [TITULO/CONTENIDO]
+Herramienta [TITULO/CONTENIDO]
+Vendedor/Tienda [TITULO/CONTENIDO]
+Versi¾n [TITULO/CONTENIDO]
+GuÝa de Referencia [TITULO/CONTENIDO]
+Rational Unified Process [TITULO/CONTENIDO]
+Rational Software Corp. [TITULO/CONTENIDO]
+5.5 [TITULO/CONTENIDO]
+Administraci¾n de Testing [TITULO/CONTENIDO]
+Rational TestManager incluida en el Rational TeamTest [TITULO/CONTENIDO]
+Rational Software Corp. [TITULO/CONTENIDO]
+7.5 [TITULO/CONTENIDO]
+Seguimiento de Defectos [TITULO/CONTENIDO]
+Rational ClearQuest TT Edition incluida en el Rational TeamTest [TITULO/CONTENIDO]
+Rational Software Corp. [TITULO/CONTENIDO]
+2.0 [TITULO/CONTENIDO]
+Testing Funcional [TITULO/CONTENIDO]
+Rational Robot incluido en el Rational TeamTest [TITULO/CONTENIDO]
+Rational Software Corp. [TITULO/CONTENIDO]
+7.5 [TITULO/CONTENIDO]
+ASQ Tool (performance testing) [TITULO/CONTENIDO]
+No definido [TITULO/CONTENIDO]
+Test Coverage Monitor or Profiler [TITULO/CONTENIDO]
+No definido [TITULO/CONTENIDO]
+Herramienta de DBMS [TITULO/CONTENIDO]
+Microsoft Access [TITULO/CONTENIDO]
+Microsoft Software Corp. [TITULO/CONTENIDO]
+97 [TITULO/CONTENIDO]
+SQL Server [TITULO/CONTENIDO]
+Microsoft Software Corp. [TITULO/CONTENIDO]
+7.0 [TITULO/CONTENIDO]
+Recursos [TITULO/CONTENIDO]
+Profesionales [TITULO/CONTENIDO]
+Recursos Humanos [TITULO/CONTENIDO]
+Rol [TITULO/CONTENIDO]
+Recursos mÝnimos recomendados [TITULO/CONTENIDO]
+(N·mero de personas full-time) [TITULO/CONTENIDO]
+Responsabilidades especÝficas / Comentarios [TITULO/CONTENIDO]
+Dise±ador de casos de prueba [TITULO/CONTENIDO]
+Responsabilidades [TITULO/CONTENIDO]
+Identificar, priorizar e implementar los casos de prueba. [TITULO/CONTENIDO]
+Evaluar de forma el esfuerzo de testing. [TITULO/CONTENIDO]
+Testeador [TITULO/CONTENIDO]
+Responsabilidades: [TITULO/CONTENIDO]
+Ejecutar los casos de prueba. [TITULO/CONTENIDO]
+Guardar estado de los resultados. [TITULO/CONTENIDO]
+Recuperaci¾n de errores. [TITULO/CONTENIDO]
+Generar peticiones de cambios en la documentaci¾n. [TITULO/CONTENIDO]
+Administrador de sistema del pruebas [TITULO/CONTENIDO]
+Responsabilidades [TITULO/CONTENIDO]
+Administrar el sistema de control de pruebas. [TITULO/CONTENIDO]
+Instalar / administrar el acceso al sistema de pruebas. [TITULO/CONTENIDO]
+Administrador de la base de datos / Encargado de la base de datos [TITULO/CONTENIDO]
+Responsabilidades: [TITULO/CONTENIDO]
+Administra los datos del prueba (Base de Datos) [TITULO/CONTENIDO]
+Asegurar que el entorno de datos de prueba (base de datos) y los valores que contiene son controlados y mantenidos. [TITULO/CONTENIDO]
+Dise±ador [TITULO/CONTENIDO]
+Responsabilidades: [TITULO/CONTENIDO]
+Identificar y definir las operaciones, atributos y asociaciones de las clases de prueba. [TITULO/CONTENIDO]
+Identificar y definir los paquetes de prueba. [TITULO/CONTENIDO]
+Implementador [TITULO/CONTENIDO]
+Responsabilidades: [TITULO/CONTENIDO]
+Implementar las clases de prueba y los paquetes de prueba. [TITULO/CONTENIDO]
+Ambiente de pruebas [TITULO/CONTENIDO]
+Se identifican los requerimientos de hardware, software y de comunicaci¾n necesarios para crear y dar soporte permanente al Ambiente de pruebas. Las actividades de instalaci¾n y configuraci¾n para el conjunto de los componentes del Ambiente de pruebas, deberßn ser planificadas y calendarizadas. Se requiere que este ambiente sea seguro, estable y dedicado exclusivamente para las pruebas del sistema. [TITULO/CONTENIDO]
+[Se puede referenciar el artefacto ôEspecificaci¾n de Ambientesö.] [TITULO/CONTENIDO]
+Preparaci¾n del ambiente de pruebas [TITULO/CONTENIDO]
+Las pruebas unitarias y de regresi¾n deberßn ser ejecutadas dentro del Ambiente de desarrollo, las pruebas de aceptaci¾n del usuario y del sistema se ejecutarßn en este Ambiente de pruebas. Este ambiente deberß representar una configuraci¾n idÚntica al Ambiente de producci¾n o al menos, una versi¾n en menor escala. Esto se requiere debido a que se debe replicar el rendimiento de la lÝnea base y las medidas de mejoramiento relacionadas. [TITULO/CONTENIDO]
+Dise±o del ambiente de pruebas [TITULO/CONTENIDO]
+ITEM [TITULO/CONTENIDO]
+DESCRIPCIËN [TITULO/CONTENIDO]
+OBSERVACIONES [TITULO/CONTENIDO]
+HARDWARE [TITULO/CONTENIDO]
+Estaci¾n de Pruebas (Cliente) [TITULO/CONTENIDO]
+Procesador [TITULO/CONTENIDO]
+Memoria RAM [TITULO/CONTENIDO]
+Espacio en Disco [TITULO/CONTENIDO]
+Tipo Monitor y Resoluci¾n [TITULO/CONTENIDO]
+Unidad de Disquete [TITULO/CONTENIDO]
+Tarjeta de red [TITULO/CONTENIDO]
+Modem [TITULO/CONTENIDO]
+Mouse [TITULO/CONTENIDO]
+Tipo Enlace [TITULO/CONTENIDO]
+Servidores [TITULO/CONTENIDO]
+Base de Datos (pruebas) [TITULO/CONTENIDO]
+Procesador [TITULO/CONTENIDO]
+Memoria RAM [TITULO/CONTENIDO]
+Espacio en Disco [TITULO/CONTENIDO]
+Tipo Monitor y Resoluci¾n [TITULO/CONTENIDO]
+Unidad de Disquete [TITULO/CONTENIDO]
+Tarjeta de red [TITULO/CONTENIDO]
+Modem [TITULO/CONTENIDO]
+Mouse [TITULO/CONTENIDO]
+Tipo Enlace [TITULO/CONTENIDO]
+Aplicaci¾n (pruebas) [TITULO/CONTENIDO]
+Procesador [TITULO/CONTENIDO]
+Memoria RAM [TITULO/CONTENIDO]
+Espacio en Disco [TITULO/CONTENIDO]
+Tipo Monitor y Resoluci¾n [TITULO/CONTENIDO]
+Unidad de Disquete [TITULO/CONTENIDO]
+Tarjeta de red [TITULO/CONTENIDO]
+M¾dem [TITULO/CONTENIDO]
+Mouse [TITULO/CONTENIDO]
+Tipo Enlace [TITULO/CONTENIDO]
+Impresoras [TITULO/CONTENIDO]
+Marca y Modelo [TITULO/CONTENIDO]
+Tipo [TITULO/CONTENIDO]
+Resoluci¾n [TITULO/CONTENIDO]
+Rendimiento [TITULO/CONTENIDO]
+Dedicaci¾n [TITULO/CONTENIDO]
+RED [TITULO/CONTENIDO]
+TopologÝa [TITULO/CONTENIDO]
+Medio [TITULO/CONTENIDO]
+Velocidad [TITULO/CONTENIDO]
+Protocolo [TITULO/CONTENIDO]
+M¾dems [TITULO/CONTENIDO]
+Conexi¾n Internet [TITULO/CONTENIDO]
+Sistema de Respaldo / Restauraci¾n [TITULO/CONTENIDO]
+Unidad (Modelo y Marca) [TITULO/CONTENIDO]
+Capacidad [TITULO/CONTENIDO]
+Ubicaci¾n [TITULO/CONTENIDO]
+SOFTWARE [TITULO/CONTENIDO]
+Estaci¾n de Pruebas (Cliente) [TITULO/CONTENIDO]
+Sistema Operativo [TITULO/CONTENIDO]
+Herramienta de testing [TITULO/CONTENIDO]
+Herramienta de Modelamiento [TITULO/CONTENIDO]
+BDMA [TITULO/CONTENIDO]
+Browser [TITULO/CONTENIDO]
+Software de Escritorio [TITULO/CONTENIDO]
+Base de Datos (pruebas) [TITULO/CONTENIDO]
+Sistema Operativo [TITULO/CONTENIDO]
+Software de Red [TITULO/CONTENIDO]
+Dominio/Cuenta [TITULO/CONTENIDO]
+Aplicaci¾n (pruebas) [TITULO/CONTENIDO]
+Sistema Operativo [TITULO/CONTENIDO]
+Software de Red [TITULO/CONTENIDO]
+Dominio/Cuenta [TITULO/CONTENIDO]
+Repositorios [TITULO/CONTENIDO]
+Servidor [TITULO/CONTENIDO]
+Dominio / Cuenta [TITULO/CONTENIDO]
+Seguridad [TITULO/CONTENIDO]
+Dise±o ambiente de pruebas [TITULO/CONTENIDO]
+El siguiente diagrama muestra la arquitectura del Ambiente de pruebas requerido para realizar las pruebas. La arquitectura del ambiente de pruebas debe ser, en la medida de lo posible, similar a la arquitectura definida para el sistema en producci¾n. [TITULO/CONTENIDO]
+Integraci¾n del ambiente de pruebas y configuraci¾n [TITULO/CONTENIDO]
+Para esta actividad se requerirß la participaci¾n de profesionales de  en cuanto a instalaci¾n, configuraci¾n y puesta en marcha del Ambiente de Pruebas. Principalmente se requiere del responsable de la Red y Administraci¾n de Bases de Datos, de tal forma de obtener un ambiente lo mßs consistente y similar al de producci¾n, con las bases de datos creadas y el software configurado para asegurar que el sistema funciona de acuerdo a dise±o.
+Las actividades generales a ser consideradas son: [TITULO/CONTENIDO]
+Actividad [TITULO/CONTENIDO]
+Responsable [TITULO/CONTENIDO]
+Fecha Estimada [TITULO/CONTENIDO]
+Fecha Real [TITULO/CONTENIDO]
+Observaciones [TITULO/CONTENIDO]
+Generaci¾n de datos [TITULO/CONTENIDO]
+La generaci¾n de los datos para las pruebas consideran los siguientes aspectos, que se deben definir de acuerdo a los requerimientos y posibilidades de obtenci¾n. Los aspectos que se describen a continuaci¾n, buscan que los datos sean los correctos y que cubran todos los riesgos y situaciones necesarias. [TITULO/CONTENIDO]
+Muestra de producci¾n [TITULO/CONTENIDO]
+Para que la muestra de datos sea realmente representativa, se deberß elegir una fecha testigo adecuada y que posibilite la mayor cobertura de datos.  En este sentido se ha elegido como fecha testigo el [TITULO/CONTENIDO]
+Para la obtenci¾n de datos por esta vÝa, se deberßn definir las restricciones (por motivos de confidencialidad) y generar alg·n utilitario para filtrar los datos de tal forma de obtener la mayor variabilidad de datos posible. [TITULO/CONTENIDO]
+Ademßs se deben considerar los siguientes aspectos para asegurar que estos datos funcionen correctamente en el Ambiente de Pruebas, si corresponde: [TITULO/CONTENIDO]
+Archivos Maestros al Inicio del DÝa [TITULO/CONTENIDO]
+Tablas de Parßmetros [TITULO/CONTENIDO]
+Interfaces de Entrada [TITULO/CONTENIDO]
+Archivos de Movimientos del dÝa o del periodo [TITULO/CONTENIDO]
+Todos estos aspectos se deben considerar en los distintos ambientes donde los datos van a ser utilizados en las transacciones o actualizaciones. [TITULO/CONTENIDO]
+Actividades e Hitos del Plan de Pruebas [TITULO/CONTENIDO]
+[A continuaci¾n se enumeran las actividades a realizar.] [TITULO/CONTENIDO]
+Tarea [TITULO/CONTENIDO]
+Responsable [TITULO/CONTENIDO]
+Esfuerzo [TITULO/CONTENIDO]
+Fecha Inicio [TITULO/CONTENIDO]
+Fecha TÚrmino [TITULO/CONTENIDO]
+Plan de Pruebas [TITULO/CONTENIDO]
+Identificar el Proyecto [TITULO/CONTENIDO]
+Definir Estrategia [TITULO/CONTENIDO]
+Estimar Actividades [TITULO/CONTENIDO]
+Identificar Recursos [TITULO/CONTENIDO]
+Documentar el ôPlan de Pruebasö [TITULO/CONTENIDO]
+Agendar de Actividades [TITULO/CONTENIDO]
+Revisar el ôPlan de Pruebasö [TITULO/CONTENIDO]
+Dise±o de las Pruebas [TITULO/CONTENIDO]
+Analizar Requerimientos [TITULO/CONTENIDO]
+Especificar Procedimientos de prueba [TITULO/CONTENIDO]
+Especificar casos de prueba [TITULO/CONTENIDO]
+Revisar Cobertura de los requerimientos de prueba [TITULO/CONTENIDO]
+Implementaci¾n de las Pruebas [TITULO/CONTENIDO]
+Establecer Ambiente de Implementaci¾n [TITULO/CONTENIDO]
+Desarrollar los Procedimientos de Prueba [TITULO/CONTENIDO]
+Probar y depurar los procedimientos de prueba [TITULO/CONTENIDO]
+Modificar los procedimientos de prueba [TITULO/CONTENIDO]
+Ejecuci¾n de las pruebas [TITULO/CONTENIDO]
+Ejecutar pruebas [TITULO/CONTENIDO]
+Comprobar resultados esperados [TITULO/CONTENIDO]
+Investigar resultados inesperados [TITULO/CONTENIDO]
+Registrar defectos (log) [TITULO/CONTENIDO]
+Re-Ejecutar las pruebas [TITULO/CONTENIDO]
+Evaluaci¾n de las pruebas [TITULO/CONTENIDO]
+Revisar el Log de pruebas [TITULO/CONTENIDO]
+Evaluar cobertura de los casos de prueba [TITULO/CONTENIDO]
+Evaluar defectos [TITULO/CONTENIDO]
+Reportar defectos [TITULO/CONTENIDO]
+Entregables [TITULO/CONTENIDO]
+[En esta secci¾n se deben listar los documentos, herramientas, y reportes que serßn creados con autor, destinatario y fecha de entrega.] [TITULO/CONTENIDO]
+[La documentaci¾n de casos de prueba y reportes puede hacerse con los artefactos ôPlanilla de Casos de Pruebaö y ôSumario de Evaluaci¾n de Pruebasö.] [TITULO/CONTENIDO]
+Plan de pruebas [TITULO/CONTENIDO]
+[Esta secci¾n identifica los reportes del ôPlan de pruebasö que serßn creados y distribuidos.] [TITULO/CONTENIDO]
+Criterio de entrada para el ôPlan de pruebasö [TITULO/CONTENIDO]
+Criterio de salida para el ôPlan de pruebasö [TITULO/CONTENIDO]
+Criterio de suspensi¾n y resumisi¾n [TITULO/CONTENIDO]
+[Especifica el criterio que se usarß para determinar si la ejecuci¾n del ôPlan de pruebasö debe ser suspendida prematuramente o finalizada antes de ser completada, y bajo quÚ criterio puede ser reasumido.] [TITULO/CONTENIDO]
+Resultados de las pruebas [TITULO/CONTENIDO]
+[Describe los mÚtodos y herramientas usadas para registrar y reportar los resultados y el estado de la ejecuci¾n del ôPlan de pruebasö.] [TITULO/CONTENIDO]
+Reporte de defectos [TITULO/CONTENIDO]
+[Define los mÚtodos y herramienta usados para registrar, ajustar y reportar los incidentes en la ejecuci¾n del ôPlan de pruebasö.] [TITULO/CONTENIDO]
+Anexos [TITULO/CONTENIDO]
+A: Tareas del proyecto [TITULO/CONTENIDO]
+La siguiente lista muestra las tareas relacionadas con el ôPlan de pruebasö: [TITULO/CONTENIDO]
+ôPlan de pruebasö (preliminar, al inicio del proyecto) [TITULO/CONTENIDO]
+Identificar requerimientos para el testing [TITULO/CONTENIDO]
+Identificar los riesgos, cuantificar impacto [TITULO/CONTENIDO]
+Desarrollar la estrategia de pruebas [TITULO/CONTENIDO]
+Identificar los recursos para las pruebas [TITULO/CONTENIDO]
+Generar ôPlan de Pruebasö detallado [TITULO/CONTENIDO]
+Dise±o general de las pruebas [TITULO/CONTENIDO]
+Anßlisis de carga [TITULO/CONTENIDO]
+Identificar y describir los casos de prueba [TITULO/CONTENIDO]
+Identificar y estructurar los procedimientos de prueba [TITULO/CONTENIDO]
+Revisar y accesar la cobertura de las pruebas [TITULO/CONTENIDO]
+Implementar las pruebas [TITULO/CONTENIDO]
+Grabar o programar los scripts de las pruebas, si aplica [TITULO/CONTENIDO]
+Identificar las funcionalidades a probar, especÝficos en el modelo de dise±o e implementaci¾n [TITULO/CONTENIDO]
+Establecer el conjunto de datos externos [TITULO/CONTENIDO]
+Ejecutar las pruebas [TITULO/CONTENIDO]
+Ejecutar los procedimientos de prueba [TITULO/CONTENIDO]
+Evaluar la ejecuci¾n de las pruebas [TITULO/CONTENIDO]
+Comprobar los resultados [TITULO/CONTENIDO]
+Investigar los resultados inesperados [TITULO/CONTENIDO]
+Registro de defectos, Informe de Resultados [TITULO/CONTENIDO]
+Evaluar las pruebas [TITULO/CONTENIDO]
+Evaluar la cobertura de los casos de prueba [TITULO/CONTENIDO]
+Evaluar la cobertura del c¾digo [TITULO/CONTENIDO]
+Analizar defectos [TITULO/CONTENIDO]
+B: Pruebas de rendimiento (performance) [TITULO/CONTENIDO]
+[El testing de rendimiento es una prueba para comprobar los tiempos de respuestas, la tasa de transacciones y otros tiempos requeridos de desempe±o. Su es comprobar que los tiempos de respuestas requeridos son los ¾ptimos, y que el desempe±o del sistema y la configuraci¾n del hardware son adecuados frente a una serie de transacciones bajo ciertas condiciones de carga.] [TITULO/CONTENIDO]
+Para esto, se definen las transacciones de acuerdo a los casos de uso especÝficos que se espera que un actor del sistema realice usando un conjunto de datos para agregar o modificar transacciones. [TITULO/CONTENIDO]
+Objetivo de la prueba: [TITULO/CONTENIDO]
+Comprobar la conducta de rendimiento para las transacciones seleccionadas o funcionalidades bajo las siguientes condiciones: [TITULO/CONTENIDO]
+- Una carga de trabajo normal. [TITULO/CONTENIDO]
+- Una sobrecarga de trabajo. [TITULO/CONTENIDO]
+TÚcnica a usar: [TITULO/CONTENIDO]
+Usar los procedimientos de pruebas desarrollados para el testing funcional. [TITULO/CONTENIDO]
+Modificar los archivos de datos para aumentar las transacciones o los script de robotizaci¾n para incrementar el n·mero de iteraciones de cada transacci¾n. [TITULO/CONTENIDO]
+Los script deberßn correr en una mßquina (la mejor referencia es un solo usuario y una ·nica transacci¾n) y repetirla con m·ltiples clientes (virtuales o reales). [TITULO/CONTENIDO]
+Criterio de validaci¾n: [TITULO/CONTENIDO]
+Una Transacci¾n / Un Usuario: La finalizaci¾n exitosa de los scripts de prueba sin ninguna falla dentro del tiempo esperado (por transacci¾n en forma independiente). [TITULO/CONTENIDO]
+M·ltiples Transacciones / M·ltiples Usuarios: La finalizaci¾n exitosa de los scripts de prueba sin ninguna falla dentro tiempo estimado. [TITULO/CONTENIDO]
+Consideraciones especiales: [TITULO/CONTENIDO]
+La extensi¾n del testing de rendimiento requiere tener en background la carga de trabajo en el servidor. [TITULO/CONTENIDO]
+Existen varios mÚtodos que se pueden usar para realizar esto como por ejemplo: [TITULO/CONTENIDO]
+Gatillar transacciones directamente al servidor, normalmente en forma de llamadas de SQL. [TITULO/CONTENIDO]
+Crear una carga de usuarios virtuales para simular (normalmente varios cientos) los clientes.  Para esto se utilizan herramientas de emulaci¾n de terminales remotas para lograr esta carga.  Esta tÚcnica tambiÚn puede usarse para someter a la red a un alto trßfico. [TITULO/CONTENIDO]
+Usar m·ltiples clientes fÝsicos, cada uno corriendo los Test scripts para agregar una carga al sistema. [TITULO/CONTENIDO]
+El testing de rendimiento deberÝa realizarse en una mßquina dedicada o en un tiempo dedicado. Esto permite un control total y una exacta medici¾n. [TITULO/CONTENIDO]
+Las bases de datos utilizadas para realizar el testing de rendimiento deberßn ser del tama±o equivalente a las de producci¾n o a escala similar. [TITULO/CONTENIDO]
+Observaciones: [TITULO/CONTENIDO]
+C: Pruebas de seguridad y de control de acceso [TITULO/CONTENIDO]
+Se recomienda que el Administrador de la Red y del Sistema planifiquen algunas pruebas en este sentido. [TITULO/CONTENIDO]
+Este testing se enfoca en dos ßreas claves de la seguridad: [TITULO/CONTENIDO]
+Seguridad a nivel de la Aplicaci¾n, incluyendo acceso a los datos o funciones de negocio, y [TITULO/CONTENIDO]
+Seguridad a nivel del Sistema, incluyendo el autenticaci¾n (login) y/o acceso remoto al sistema. [TITULO/CONTENIDO]
+La seguridad a nivel de la aplicaci¾n, asegura que, sobre la base de la seguridad deseada, se restringen a los usuarios a ciertas funciones o casos de uso especÝficos o se les limita el acceso a datos disponible para ellos. [TITULO/CONTENIDO]
+La seguridad a nivel de sistema, asegura que s¾lo los usuarios definidos en el sistema son capaces de acceder a la aplicaci¾n y s¾lo a travÚs de entradas apropiadas. [TITULO/CONTENIDO]
+Objetivo de la prueba: [TITULO/CONTENIDO]
+Seguridad a Nivel de Aplicaci¾n: comprobar que un usuario puede acceder s¾lo a las funcionalidades y datos para las cuales ese tipo de usuario tiene permiso. [TITULO/CONTENIDO]
+Seguridad a Nivel de Sistema: comprobar que s¾lo esos usuarios con acceso al sistema y aplicaci¾n tienen permitido el acceso. [TITULO/CONTENIDO]
+TÚcnica a usar: [TITULO/CONTENIDO]
+Nivel de Aplicaci¾n: Identifique y liste cada tipo de usuario y las funcionalidades y datos de cada tipo para las cuales tiene permiso. [TITULO/CONTENIDO]
+Cree pruebas para cada tipo de usuario y verifique cada permiso creando transacciones especÝficas para cada usuario. [TITULO/CONTENIDO]
+Modifique los tipos de usuarios y vuelva a ejecutar los casos de prueba para los mismos usuarios. En cada caso verifique si las funcionalidades y los datos estßn correctamente disponibles o denegados. [TITULO/CONTENIDO]
+Acceso a Nivel de Sistema: vea las consideraciones especiales mßs abajo. [TITULO/CONTENIDO]
+Criterio de validaci¾n: [TITULO/CONTENIDO]
+Para cada tipo de usuario conocido, las funcionalidades y los datos correctos debieran estar disponibles y todas las transacciones ejecutadas debieran ejecutarse de acuerdo a lo esperado. [TITULO/CONTENIDO]
+Consideraciones especiales: [TITULO/CONTENIDO]
+El acceso al sistema deberÝa ser comprobado con el administrador de la red o del sistema. [TITULO/CONTENIDO]
+Este testing quizßs pueda requerir de la participaci¾n del administrador de la red o del sistema. [TITULO/CONTENIDO]
+Observaciones: [TITULO/CONTENIDO]

@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title id="head-title">reporte_pruebas.html</title>
+      <style type="text/css">body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  /* do not increase min-width as some may use split screens */
+  min-width: 800px;
+  color: #999;
+}
+
+h1 {
+  font-size: 24px;
+  color: black;
+}
+
+h2 {
+  font-size: 16px;
+  color: black;
+}
+
+p {
+  color: black;
+}
+
+a {
+  color: #999;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+/******************************
+ * SUMMARY INFORMATION
+ ******************************/
+#environment td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  vertical-align: top;
+}
+#environment tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+#environment ul {
+  margin: 0;
+  padding: 0 20px;
+}
+
+/******************************
+ * TEST RESULT COLORS
+ ******************************/
+span.passed,
+.passed .col-result {
+  color: green;
+}
+
+span.skipped,
+span.xfailed,
+span.rerun,
+.skipped .col-result,
+.xfailed .col-result,
+.rerun .col-result {
+  color: orange;
+}
+
+span.error,
+span.failed,
+span.xpassed,
+.error .col-result,
+.failed .col-result,
+.xpassed .col-result {
+  color: red;
+}
+
+.col-links__extra {
+  margin-right: 3px;
+}
+
+/******************************
+ * RESULTS TABLE
+ *
+ * 1. Table Layout
+ * 2. Extra
+ * 3. Sorting items
+ *
+ ******************************/
+/*------------------
+ * 1. Table Layout
+ *------------------*/
+#results-table {
+  border: 1px solid #e6e6e6;
+  color: #999;
+  font-size: 12px;
+  width: 100%;
+}
+#results-table th,
+#results-table td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  text-align: left;
+}
+#results-table th {
+  font-weight: bold;
+}
+
+/*------------------
+ * 2. Extra
+ *------------------*/
+.logwrapper {
+  max-height: 230px;
+  overflow-y: scroll;
+  background-color: #e6e6e6;
+}
+.logwrapper.expanded {
+  max-height: none;
+}
+.logwrapper.expanded .logexpander:after {
+  content: "collapse [-]";
+}
+.logwrapper .logexpander {
+  z-index: 1;
+  position: sticky;
+  top: 10px;
+  width: max-content;
+  border: 1px solid;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin: 10px 0 10px calc(100% - 80px);
+  cursor: pointer;
+  background-color: #e6e6e6;
+}
+.logwrapper .logexpander:after {
+  content: "expand [+]";
+}
+.logwrapper .logexpander:hover {
+  color: #000;
+  border-color: #000;
+}
+.logwrapper .log {
+  min-height: 40px;
+  position: relative;
+  top: -50px;
+  height: calc(100% + 50px);
+  border: 1px solid #e6e6e6;
+  color: black;
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  padding: 5px;
+  padding-right: 80px;
+  white-space: pre-wrap;
+}
+
+div.media {
+  border: 1px solid #e6e6e6;
+  float: right;
+  height: 240px;
+  margin: 0 5px;
+  overflow: hidden;
+  width: 320px;
+}
+
+.media-container {
+  display: grid;
+  grid-template-columns: 25px auto 25px;
+  align-items: center;
+  flex: 1 1;
+  overflow: hidden;
+  height: 200px;
+}
+
+.media-container--fullscreen {
+  grid-template-columns: 0px auto 0px;
+}
+
+.media-container__nav--right,
+.media-container__nav--left {
+  text-align: center;
+  cursor: pointer;
+}
+
+.media-container__viewport {
+  cursor: pointer;
+  text-align: center;
+  height: inherit;
+}
+.media-container__viewport img,
+.media-container__viewport video {
+  object-fit: cover;
+  width: 100%;
+  max-height: 100%;
+}
+
+.media__name,
+.media__counter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex: 0 0 25px;
+  align-items: center;
+}
+
+.collapsible td:not(.col-links) {
+  cursor: pointer;
+}
+.collapsible td:not(.col-links):hover::after {
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.col-result {
+  width: 130px;
+}
+.col-result:hover::after {
+  content: " (hide details)";
+}
+
+.col-result.collapsed:hover::after {
+  content: " (show details)";
+}
+
+#environment-header h2:hover::after {
+  content: " (hide details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#environment-header.collapsed h2:hover::after {
+  content: " (show details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/*------------------
+ * 3. Sorting items
+ *------------------*/
+.sortable {
+  cursor: pointer;
+}
+.sortable.desc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: -12.5px;
+  border: 10px solid #4caf50;
+  border-bottom: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+.sortable.asc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: 12.5px;
+  border: 10px solid #4caf50;
+  border-top: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+
+.hidden, .summary__reload__button.hidden {
+  display: none;
+}
+
+.summary__data {
+  flex: 0 0 550px;
+}
+.summary__reload {
+  flex: 1 1;
+  display: flex;
+  justify-content: center;
+}
+.summary__reload__button {
+  flex: 0 0 300px;
+  display: flex;
+  color: white;
+  font-weight: bold;
+  background-color: #4caf50;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.summary__reload__button:hover {
+  background-color: #46a049;
+}
+.summary__spacer {
+  flex: 0 0 550px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filters,
+.collapse {
+  display: flex;
+  align-items: center;
+}
+.filters button,
+.collapse button {
+  color: #999;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.filters button:hover,
+.collapse button:hover {
+  color: #ccc;
+}
+
+.filter__label {
+  margin-right: 10px;
+}
+
+      </style>
+    
+  </head>
+  <body>
+    <h1 id="title">reporte_pruebas.html</h1>
+    <p>Report generated on 26-Jun-2026 at 18:35:43 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a>
+        v4.2.0</p>
+    <div id="environment-header">
+      <h2>Environment</h2>
+    </div>
+    <table id="environment"></table>
+    <!-- TEMPLATES -->
+      <template id="template_environment_row">
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+    </template>
+    <template id="template_results-table__body--empty">
+      <tbody class="results-table-row">
+        <tr id="not-found-message">
+          <td colspan="4">No results found. Check the filters.</td>
+        </tr>
+      </tbody>
+    </template>
+    <template id="template_results-table__tbody">
+      <tbody class="results-table-row">
+        <tr class="collapsible">
+        </tr>
+        <tr class="extras-row">
+          <td class="extra" colspan="4">
+            <div class="extraHTML"></div>
+            <div class="media">
+              <div class="media-container">
+                  <div class="media-container__nav--left">&lt;</div>
+                  <div class="media-container__viewport">
+                    <img src="" />
+                    <video controls>
+                      <source src="" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="media-container__nav--right">&gt;</div>
+                </div>
+                <div class="media__name"></div>
+                <div class="media__counter"></div>
+            </div>
+            <div class="logwrapper">
+              <div class="logexpander"></div>
+              <div class="log"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </template>
+    <!-- END TEMPLATES -->
+    <div class="summary">
+      <div class="summary__data">
+        <h2>Summary</h2>
+        <div class="additional-summary prefix">
+        </div>
+        <p class="run-count">28 tests took 00:00:23.</p>
+        <p class="filter">(Un)check the boxes to filter the results.</p>
+        <div class="summary__reload">
+          <div class="summary__reload__button hidden" onclick="location.reload()">
+            <div>There are still tests running. <br />Reload this page to get the latest results!</div>
+          </div>
+        </div>
+        <div class="summary__spacer"></div>
+        <div class="controls">
+          <div class="filters">
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="failed" disabled>
+            <span class="failed">0 Failed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="passed" >
+            <span class="passed">28 Passed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="skipped" disabled>
+            <span class="skipped">0 Skipped,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xfailed" disabled>
+            <span class="xfailed">0 Expected failures,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xpassed" disabled>
+            <span class="xpassed">0 Unexpected passes,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="error" >
+            <span class="error">2 Errors,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="rerun" disabled>
+            <span class="rerun">0 Reruns</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="retried" disabled>
+            <span class="retried">0 Retried,</span>
+          </div>
+          <div class="collapse">
+            <button id="show_all_details">Show all details</button>&nbsp;/&nbsp;<button id="hide_all_details">Hide all details</button>
+          </div>
+        </div>
+      </div>
+      <div class="additional-summary summary">
+      </div>
+      <div class="additional-summary postfix">
+      </div>
+    </div>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable" data-column-type="result">Result</th>
+          <th class="sortable" data-column-type="testId">Test</th>
+          <th class="sortable" data-column-type="duration">Duration</th>
+          <th>Links</th>
+        </tr>
+      </thead>
+    </table>
+  <footer>
+    <div id="data-container" data-jsonblob="{&#34;environment&#34;: {&#34;Python&#34;: &#34;3.14.5&#34;, &#34;Platform&#34;: &#34;Windows-11-10.0.26200-SP0&#34;, &#34;Packages&#34;: {&#34;pytest&#34;: &#34;9.1.1&#34;, &#34;pluggy&#34;: &#34;1.6.0&#34;}, &#34;Plugins&#34;: {&#34;anyio&#34;: &#34;4.13.0&#34;, &#34;cov&#34;: &#34;7.1.0&#34;, &#34;html&#34;: &#34;4.2.0&#34;, &#34;metadata&#34;: &#34;3.1.1&#34;}, &#34;JAVA_HOME&#34;: &#34;C:\\Program Files\\Android\\Android Studio\\jbr&#34;}, &#34;tests&#34;: {&#34;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA01_cliente_ve_catalogo_con_precio_y_stock&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA01_cliente_ve_catalogo_con_precio_y_stock&#34;, &#34;duration&#34;: &#34;517 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA01_cliente_ve_catalogo_con_precio_y_stock&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;517 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA02_cliente_filtra_por_categoria&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA02_cliente_filtra_por_categoria&#34;, &#34;duration&#34;: &#34;00:00:01&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA02_cliente_filtra_por_categoria&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:01&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA03_cliente_agrega_producto_al_carrito&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA03_cliente_agrega_producto_al_carrito&#34;, &#34;duration&#34;: &#34;542 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA03_cliente_agrega_producto_al_carrito&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;542 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA04_login_rechaza_credenciales_invalidas&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA04_login_rechaza_credenciales_invalidas&#34;, &#34;duration&#34;: &#34;627 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA04_login_rechaza_credenciales_invalidas&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;627 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA05_api_categorias_lista_todas_las_categorias&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA05_api_categorias_lista_todas_las_categorias&#34;, &#34;duration&#34;: &#34;569 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA05_api_categorias_lista_todas_las_categorias&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;569 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA06_imagen_producto_accesible&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Error&#34;, &#34;testId&#34;: &#34;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA06_imagen_producto_accesible::setup&#34;, &#34;duration&#34;: &#34;480 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Error&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA06_imagen_producto_accesible::setup&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;480 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;sqlalchemy.engine.base.Connection object at 0x000002CDBD09B3E0&amp;gt;\ndialect = &amp;lt;sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000002CDBD15E0D0&amp;gt;\ncontext = &amp;lt;sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000002CDBD1D14F0&amp;gt;\n\n    def _exec_insertmany_context(\n        self,\n        dialect: Dialect,\n        context: ExecutionContext,\n    ) -&amp;gt; CursorResult[Any]:\n        &amp;quot;&amp;quot;&amp;quot;continue the _execute_context() method for an &amp;quot;insertmanyvalues&amp;quot;\n        operation, which will invoke DBAPI\n        cursor.execute() one or more times with individual log and\n        event hook calls.\n    \n        &amp;quot;&amp;quot;&amp;quot;\n    \n        if dialect.bind_typing is BindTyping.SETINPUTSIZES:\n            generic_setinputsizes = context._prepare_set_input_sizes()\n        else:\n            generic_setinputsizes = None\n    \n        cursor, str_statement, parameters = (\n            context.cursor,\n            context.statement,\n            context.parameters,\n        )\n    \n        effective_parameters = parameters\n    \n        engine_events = self._has_events or self.engine._has_events\n        if self.dialect._has_events:\n            do_execute_dispatch: Iterable[Any] = (\n                self.dialect.dispatch.do_execute\n            )\n        else:\n            do_execute_dispatch = ()\n    \n        if engine_events:\n            _WORKAROUND_ISSUE_13018 = getattr(\n                self, &amp;quot;_WORKAROUND_ISSUE_13018&amp;quot;, False\n            )\n        else:\n            _WORKAROUND_ISSUE_13018 = False\n    \n        if self._echo:\n            stats = context._get_cache_stats() + &amp;quot; (insertmanyvalues)&amp;quot;\n    \n        preserve_rowcount = context.execution_options.get(\n            &amp;quot;preserve_rowcount&amp;quot;, False\n        )\n        rowcount = 0\n    \n        for imv_batch in dialect._deliver_insertmanyvalues_batches(\n            self,\n            cursor,\n            str_statement,\n            effective_parameters,\n            generic_setinputsizes,\n            context,\n        ):\n            if imv_batch.processed_setinputsizes:\n                try:\n                    dialect.do_set_input_sizes(\n                        context.cursor,\n                        imv_batch.processed_setinputsizes,\n                        context,\n                    )\n                except BaseException as e:\n                    self._handle_dbapi_exception(\n                        e,\n                        sql_util._long_statement(imv_batch.replaced_statement),\n                        imv_batch.replaced_parameters,\n                        None,\n                        context,\n                        is_sub_exec=True,\n                    )\n    \n            sub_stmt = imv_batch.replaced_statement\n            sub_params = imv_batch.replaced_parameters\n    \n            if engine_events:\n                for fn in self.dispatch.before_cursor_execute:\n                    sub_stmt, sub_params = fn(\n                        self,\n                        cursor,\n                        sub_stmt,\n                        sub_params,\n                        context,\n                        True,\n                    )\n    \n            if self._echo:\n                self._log_info(sql_util._long_statement(sub_stmt))\n    \n                imv_stats = f&amp;quot;&amp;quot;&amp;quot; {imv_batch.batchnum}/{\n                            imv_batch.total_batches\n                } ({\n                    &amp;#x27;ordered&amp;#x27;\n                    if imv_batch.rows_sorted else &amp;#x27;unordered&amp;#x27;\n                }{\n                    &amp;#x27;; batch not supported&amp;#x27;\n                    if imv_batch.is_downgraded\n                    else &amp;#x27;&amp;#x27;\n                })&amp;quot;&amp;quot;&amp;quot;\n    \n                if imv_batch.batchnum == 1:\n                    stats += imv_stats\n                else:\n                    stats = f&amp;quot;insertmanyvalues{imv_stats}&amp;quot;\n    \n                if not self.engine.hide_parameters:\n                    self._log_info(\n                        &amp;quot;[%s] %r&amp;quot;,\n                        stats,\n                        sql_util._repr_params(\n                            sub_params,\n                            batches=10,\n                            ismulti=False,\n                        ),\n                    )\n                else:\n                    self._log_info(\n                        &amp;quot;[%s] [SQL parameters hidden due to &amp;quot;\n                        &amp;quot;hide_parameters=True]&amp;quot;,\n                        stats,\n                    )\n    \n            try:\n                for fn in do_execute_dispatch:\n                    if fn(\n                        cursor,\n                        sub_stmt,\n                        sub_params,\n                        context,\n                    ):\n                        break\n                else:\n&amp;gt;                   dialect.do_execute(\n                        cursor,\n                        sub_stmt,\n                        sub_params,\n                        context,\n                    )\n\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\base.py:2125: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = &amp;lt;sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000002CDBD15E0D0&amp;gt;\ncursor = &amp;lt;sqlite3.Cursor object at 0x000002CDBD16E240&amp;gt;\nstatement = &amp;#x27;INSERT INTO usuarios (nombre, email, password_hash, rol, rut, sucursal_id, descuento) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id, created_at&amp;#x27;\nparameters = (&amp;#x27;Admin&amp;#x27;, &amp;#x27;admin@ferramas.cl&amp;#x27;, &amp;#x27;scrypt:32768:8:1$jfRVlmPfhgdE4VqJ$004c5c2964cfcf4e49f901732029454b17add3b1cd570fd5171ffd9e470e8e22659f05e9f4315fb7579bdd9b289256753349aeca174ece6de743e4680f96a22d&amp;#x27;, &amp;#x27;admin&amp;#x27;, None, None, ...)\ncontext = &amp;lt;sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000002CDBD1D14F0&amp;gt;\n\n    def do_execute(self, cursor, statement, parameters, context=None):\n&amp;gt;       cursor.execute(statement, parameters)\nE       sqlite3.IntegrityError: UNIQUE constraint failed: usuarios.email\n\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\default.py:952: IntegrityError\n\nThe above exception was the direct cause of the following exception:\n\ntmp_path = WindowsPath(&amp;#x27;C:/Users/Jose/AppData/Local/Temp/pytest-of-Jose/pytest-14/test_CA06_imagen_producto_acce0&amp;#x27;)\nmonkeypatch = &amp;lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002CDBD0B4550&amp;gt;\n\n    @pytest.fixture\n    def app(tmp_path, monkeypatch):\n        &amp;quot;&amp;quot;&amp;quot;App Flask con SQLite temporal aislado por test.&amp;quot;&amp;quot;&amp;quot;\n        db_file = tmp_path / &amp;quot;test.db&amp;quot;\n        db_uri = f&amp;quot;sqlite:///{db_file.as_posix()}&amp;quot;\n    \n        monkeypatch.setenv(&amp;quot;DATABASE_URL&amp;quot;, db_uri)\n        monkeypatch.setenv(&amp;quot;SECRET_KEY&amp;quot;, &amp;quot;test-secret-key&amp;quot;)\n        monkeypatch.setenv(&amp;quot;MP_ACCESS_TOKEN&amp;quot;, &amp;quot;TEST-123456789-abcdef&amp;quot;)\n        monkeypatch.setenv(&amp;quot;MP_PUBLIC_KEY&amp;quot;, &amp;quot;TEST-public-key-abcdef&amp;quot;)\n    \n        from app import create_app, db\n        from app import _seed_data\n    \n        application = create_app()\n        application.config[&amp;quot;SQLALCHEMY_DATABASE_URI&amp;quot;] = db_uri\n        application.config[&amp;quot;TESTING&amp;quot;] = True\n    \n        with application.app_context():\n            db.engine.dispose()\n            db.session.remove()\n            db.drop_all()\n            db.create_all()\n&amp;gt;           _seed_data()\n\ntests\\conftest.py:28: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\napp\\__init__.py:106: in _seed_data\n    db.session.commit()\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\scoping.py:597: in commit\n    return self._proxied.commit()\n           ^^^^^^^^^^^^^^^^^^^^^^\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\session.py:2030: in commit\n    trans.commit(_to_root=True)\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\state_changes.py:137: in _go\n    ret_value = fn(self, *arg, **kw)\n                ^^^^^^^^^^^^^^^^^^^^\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\session.py:1311: in commit\n    self._prepare_impl()\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\state_changes.py:137: in _go\n    ret_value = fn(self, *arg, **kw)\n                ^^^^^^^^^^^^^^^^^^^^\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\session.py:1286: in _prepare_impl\n    self.session.flush()\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\session.py:4331: in flush\n    self._flush(objects)\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\session.py:4466: in _flush\n    with util.safe_reraise():\n         ^^^^^^^^^^^^^^^^^^^\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\util\\langhelpers.py:121: in __exit__\n    raise exc_value.with_traceback(exc_tb)\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\session.py:4427: in _flush\n    flush_context.execute()\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\unitofwork.py:466: in execute\n    rec.execute(self)\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\unitofwork.py:642: in execute\n    util.preloaded.orm_persistence.save_obj(\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\persistence.py:93: in save_obj\n    _emit_insert_statements(\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\persistence.py:1143: in _emit_insert_statements\n    result = connection.execute(\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\base.py:1419: in execute\n    return meth(\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\sql\\elements.py:527: in _execute_on_connection\n    return connection._execute_clauseelement(\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\base.py:1641: in _execute_clauseelement\n    ret = self._execute_context(\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\base.py:1844: in _execute_context\n    return self._exec_insertmany_context(dialect, context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\base.py:2133: in _exec_insertmany_context\n    self._handle_dbapi_exception(\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\base.py:2363: in _handle_dbapi_exception\n    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\base.py:2125: in _exec_insertmany_context\n    dialect.do_execute(\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = &amp;lt;sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000002CDBD15E0D0&amp;gt;\ncursor = &amp;lt;sqlite3.Cursor object at 0x000002CDBD16E240&amp;gt;\nstatement = &amp;#x27;INSERT INTO usuarios (nombre, email, password_hash, rol, rut, sucursal_id, descuento) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id, created_at&amp;#x27;\nparameters = (&amp;#x27;Admin&amp;#x27;, &amp;#x27;admin@ferramas.cl&amp;#x27;, &amp;#x27;scrypt:32768:8:1$jfRVlmPfhgdE4VqJ$004c5c2964cfcf4e49f901732029454b17add3b1cd570fd5171ffd9e470e8e22659f05e9f4315fb7579bdd9b289256753349aeca174ece6de743e4680f96a22d&amp;#x27;, &amp;#x27;admin&amp;#x27;, None, None, ...)\ncontext = &amp;lt;sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000002CDBD1D14F0&amp;gt;\n\n    def do_execute(self, cursor, statement, parameters, context=None):\n&amp;gt;       cursor.execute(statement, parameters)\nE       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: usuarios.email\nE       [SQL: INSERT INTO usuarios (nombre, email, password_hash, rol, rut, sucursal_id, descuento) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id, created_at]\nE       [parameters: (&amp;#x27;Admin&amp;#x27;, &amp;#x27;admin@ferramas.cl&amp;#x27;, &amp;#x27;scrypt:32768:8:1$jfRVlmPfhgdE4VqJ$004c5c2964cfcf4e49f901732029454b17add3b1cd570fd5171ffd9e470e8e22659f05e9f4315fb7579bdd9b289256753349aeca174ece6de743e4680f96a22d&amp;#x27;, &amp;#x27;admin&amp;#x27;, None, None, 0)]\nE       (Background on this error at: https://sqlalche.me/e/20/gkpj)\n\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\default.py:952: IntegrityError\n&#34;}], &#34;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA07_webhook_mercadopago_acepta_test&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA07_webhook_mercadopago_acepta_test&#34;, &#34;duration&#34;: &#34;490 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/acceptance/test_criterios_aceptacion.py::TestCriteriosAceptacion::test_CA07_webhook_mercadopago_acepta_test&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;490 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/integration/test_api_and_flows.py::TestApiProductos::test_get_api_productos_retorna_lista_json&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Error&#34;, &#34;testId&#34;: &#34;tests/integration/test_api_and_flows.py::TestApiProductos::test_get_api_productos_retorna_lista_json::setup&#34;, &#34;duration&#34;: &#34;490 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Error&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/integration/test_api_and_flows.py::TestApiProductos::test_get_api_productos_retorna_lista_json::setup&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;490 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;sqlalchemy.engine.base.Connection object at 0x000002CDBD1D2300&amp;gt;\ndialect = &amp;lt;sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000002CDBD1CA0D0&amp;gt;\ncontext = &amp;lt;sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000002CDBD28C500&amp;gt;\n\n    def _exec_insertmany_context(\n        self,\n        dialect: Dialect,\n        context: ExecutionContext,\n    ) -&amp;gt; CursorResult[Any]:\n        &amp;quot;&amp;quot;&amp;quot;continue the _execute_context() method for an &amp;quot;insertmanyvalues&amp;quot;\n        operation, which will invoke DBAPI\n        cursor.execute() one or more times with individual log and\n        event hook calls.\n    \n        &amp;quot;&amp;quot;&amp;quot;\n    \n        if dialect.bind_typing is BindTyping.SETINPUTSIZES:\n            generic_setinputsizes = context._prepare_set_input_sizes()\n        else:\n            generic_setinputsizes = None\n    \n        cursor, str_statement, parameters = (\n            context.cursor,\n            context.statement,\n            context.parameters,\n        )\n    \n        effective_parameters = parameters\n    \n        engine_events = self._has_events or self.engine._has_events\n        if self.dialect._has_events:\n            do_execute_dispatch: Iterable[Any] = (\n                self.dialect.dispatch.do_execute\n            )\n        else:\n            do_execute_dispatch = ()\n    \n        if engine_events:\n            _WORKAROUND_ISSUE_13018 = getattr(\n                self, &amp;quot;_WORKAROUND_ISSUE_13018&amp;quot;, False\n            )\n        else:\n            _WORKAROUND_ISSUE_13018 = False\n    \n        if self._echo:\n            stats = context._get_cache_stats() + &amp;quot; (insertmanyvalues)&amp;quot;\n    \n        preserve_rowcount = context.execution_options.get(\n            &amp;quot;preserve_rowcount&amp;quot;, False\n        )\n        rowcount = 0\n    \n        for imv_batch in dialect._deliver_insertmanyvalues_batches(\n            self,\n            cursor,\n            str_statement,\n            effective_parameters,\n            generic_setinputsizes,\n            context,\n        ):\n            if imv_batch.processed_setinputsizes:\n                try:\n                    dialect.do_set_input_sizes(\n                        context.cursor,\n                        imv_batch.processed_setinputsizes,\n                        context,\n                    )\n                except BaseException as e:\n                    self._handle_dbapi_exception(\n                        e,\n                        sql_util._long_statement(imv_batch.replaced_statement),\n                        imv_batch.replaced_parameters,\n                        None,\n                        context,\n                        is_sub_exec=True,\n                    )\n    \n            sub_stmt = imv_batch.replaced_statement\n            sub_params = imv_batch.replaced_parameters\n    \n            if engine_events:\n                for fn in self.dispatch.before_cursor_execute:\n                    sub_stmt, sub_params = fn(\n                        self,\n                        cursor,\n                        sub_stmt,\n                        sub_params,\n                        context,\n                        True,\n                    )\n    \n            if self._echo:\n                self._log_info(sql_util._long_statement(sub_stmt))\n    \n                imv_stats = f&amp;quot;&amp;quot;&amp;quot; {imv_batch.batchnum}/{\n                            imv_batch.total_batches\n                } ({\n                    &amp;#x27;ordered&amp;#x27;\n                    if imv_batch.rows_sorted else &amp;#x27;unordered&amp;#x27;\n                }{\n                    &amp;#x27;; batch not supported&amp;#x27;\n                    if imv_batch.is_downgraded\n                    else &amp;#x27;&amp;#x27;\n                })&amp;quot;&amp;quot;&amp;quot;\n    \n                if imv_batch.batchnum == 1:\n                    stats += imv_stats\n                else:\n                    stats = f&amp;quot;insertmanyvalues{imv_stats}&amp;quot;\n    \n                if not self.engine.hide_parameters:\n                    self._log_info(\n                        &amp;quot;[%s] %r&amp;quot;,\n                        stats,\n                        sql_util._repr_params(\n                            sub_params,\n                            batches=10,\n                            ismulti=False,\n                        ),\n                    )\n                else:\n                    self._log_info(\n                        &amp;quot;[%s] [SQL parameters hidden due to &amp;quot;\n                        &amp;quot;hide_parameters=True]&amp;quot;,\n                        stats,\n                    )\n    \n            try:\n                for fn in do_execute_dispatch:\n                    if fn(\n                        cursor,\n                        sub_stmt,\n                        sub_params,\n                        context,\n                    ):\n                        break\n                else:\n&amp;gt;                   dialect.do_execute(\n                        cursor,\n                        sub_stmt,\n                        sub_params,\n                        context,\n                    )\n\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\base.py:2125: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = &amp;lt;sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000002CDBD1CA0D0&amp;gt;\ncursor = &amp;lt;sqlite3.Cursor object at 0x000002CDBDA9C3C0&amp;gt;\nstatement = &amp;#x27;INSERT INTO usuarios (nombre, email, password_hash, rol, rut, sucursal_id, descuento) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id, created_at&amp;#x27;\nparameters = (&amp;#x27;Admin&amp;#x27;, &amp;#x27;admin@ferramas.cl&amp;#x27;, &amp;#x27;scrypt:32768:8:1$0lCmerW5EpbSfs2e$d933c0618341ebf1b6b0e77c8efa9817c7b563c0041dd0425dac1f4cdf89d67bbd35232d632cf8ccb5ab317233d0d5ea7a0d25844b1a354267c9f1945b212bf4&amp;#x27;, &amp;#x27;admin&amp;#x27;, None, None, ...)\ncontext = &amp;lt;sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000002CDBD28C500&amp;gt;\n\n    def do_execute(self, cursor, statement, parameters, context=None):\n&amp;gt;       cursor.execute(statement, parameters)\nE       sqlite3.IntegrityError: UNIQUE constraint failed: usuarios.email\n\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\default.py:952: IntegrityError\n\nThe above exception was the direct cause of the following exception:\n\ntmp_path = WindowsPath(&amp;#x27;C:/Users/Jose/AppData/Local/Temp/pytest-of-Jose/pytest-14/test_get_api_productos_retorna0&amp;#x27;)\nmonkeypatch = &amp;lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002CDBCFF48C0&amp;gt;\n\n    @pytest.fixture\n    def app(tmp_path, monkeypatch):\n        &amp;quot;&amp;quot;&amp;quot;App Flask con SQLite temporal aislado por test.&amp;quot;&amp;quot;&amp;quot;\n        db_file = tmp_path / &amp;quot;test.db&amp;quot;\n        db_uri = f&amp;quot;sqlite:///{db_file.as_posix()}&amp;quot;\n    \n        monkeypatch.setenv(&amp;quot;DATABASE_URL&amp;quot;, db_uri)\n        monkeypatch.setenv(&amp;quot;SECRET_KEY&amp;quot;, &amp;quot;test-secret-key&amp;quot;)\n        monkeypatch.setenv(&amp;quot;MP_ACCESS_TOKEN&amp;quot;, &amp;quot;TEST-123456789-abcdef&amp;quot;)\n        monkeypatch.setenv(&amp;quot;MP_PUBLIC_KEY&amp;quot;, &amp;quot;TEST-public-key-abcdef&amp;quot;)\n    \n        from app import create_app, db\n        from app import _seed_data\n    \n        application = create_app()\n        application.config[&amp;quot;SQLALCHEMY_DATABASE_URI&amp;quot;] = db_uri\n        application.config[&amp;quot;TESTING&amp;quot;] = True\n    \n        with application.app_context():\n            db.engine.dispose()\n            db.session.remove()\n            db.drop_all()\n            db.create_all()\n&amp;gt;           _seed_data()\n\ntests\\conftest.py:28: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\napp\\__init__.py:106: in _seed_data\n    db.session.commit()\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\scoping.py:597: in commit\n    return self._proxied.commit()\n           ^^^^^^^^^^^^^^^^^^^^^^\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\session.py:2030: in commit\n    trans.commit(_to_root=True)\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\state_changes.py:137: in _go\n    ret_value = fn(self, *arg, **kw)\n                ^^^^^^^^^^^^^^^^^^^^\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\session.py:1311: in commit\n    self._prepare_impl()\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\state_changes.py:137: in _go\n    ret_value = fn(self, *arg, **kw)\n                ^^^^^^^^^^^^^^^^^^^^\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\session.py:1286: in _prepare_impl\n    self.session.flush()\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\session.py:4331: in flush\n    self._flush(objects)\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\session.py:4466: in _flush\n    with util.safe_reraise():\n         ^^^^^^^^^^^^^^^^^^^\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\util\\langhelpers.py:121: in __exit__\n    raise exc_value.with_traceback(exc_tb)\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\session.py:4427: in _flush\n    flush_context.execute()\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\unitofwork.py:466: in execute\n    rec.execute(self)\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\unitofwork.py:642: in execute\n    util.preloaded.orm_persistence.save_obj(\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\persistence.py:93: in save_obj\n    _emit_insert_statements(\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\orm\\persistence.py:1143: in _emit_insert_statements\n    result = connection.execute(\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\base.py:1419: in execute\n    return meth(\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\sql\\elements.py:527: in _execute_on_connection\n    return connection._execute_clauseelement(\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\base.py:1641: in _execute_clauseelement\n    ret = self._execute_context(\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\base.py:1844: in _execute_context\n    return self._exec_insertmany_context(dialect, context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\base.py:2133: in _exec_insertmany_context\n    self._handle_dbapi_exception(\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\base.py:2363: in _handle_dbapi_exception\n    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\base.py:2125: in _exec_insertmany_context\n    dialect.do_execute(\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = &amp;lt;sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000002CDBD1CA0D0&amp;gt;\ncursor = &amp;lt;sqlite3.Cursor object at 0x000002CDBDA9C3C0&amp;gt;\nstatement = &amp;#x27;INSERT INTO usuarios (nombre, email, password_hash, rol, rut, sucursal_id, descuento) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id, created_at&amp;#x27;\nparameters = (&amp;#x27;Admin&amp;#x27;, &amp;#x27;admin@ferramas.cl&amp;#x27;, &amp;#x27;scrypt:32768:8:1$0lCmerW5EpbSfs2e$d933c0618341ebf1b6b0e77c8efa9817c7b563c0041dd0425dac1f4cdf89d67bbd35232d632cf8ccb5ab317233d0d5ea7a0d25844b1a354267c9f1945b212bf4&amp;#x27;, &amp;#x27;admin&amp;#x27;, None, None, ...)\ncontext = &amp;lt;sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000002CDBD28C500&amp;gt;\n\n    def do_execute(self, cursor, statement, parameters, context=None):\n&amp;gt;       cursor.execute(statement, parameters)\nE       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: usuarios.email\nE       [SQL: INSERT INTO usuarios (nombre, email, password_hash, rol, rut, sucursal_id, descuento) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id, created_at]\nE       [parameters: (&amp;#x27;Admin&amp;#x27;, &amp;#x27;admin@ferramas.cl&amp;#x27;, &amp;#x27;scrypt:32768:8:1$0lCmerW5EpbSfs2e$d933c0618341ebf1b6b0e77c8efa9817c7b563c0041dd0425dac1f4cdf89d67bbd35232d632cf8ccb5ab317233d0d5ea7a0d25844b1a354267c9f1945b212bf4&amp;#x27;, &amp;#x27;admin&amp;#x27;, None, None, 0)]\nE       (Background on this error at: https://sqlalche.me/e/20/gkpj)\n\n..\\..\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\sqlalchemy\\engine\\default.py:952: IntegrityError\n&#34;}], &#34;tests/integration/test_api_and_flows.py::TestApiProductos::test_get_api_productos_por_categoria&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/integration/test_api_and_flows.py::TestApiProductos::test_get_api_productos_por_categoria&#34;, &#34;duration&#34;: &#34;485 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/integration/test_api_and_flows.py::TestApiProductos::test_get_api_productos_por_categoria&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;485 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/integration/test_api_and_flows.py::TestApiProductos::test_get_api_categorias_distintas&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/integration/test_api_and_flows.py::TestApiProductos::test_get_api_categorias_distintas&#34;, &#34;duration&#34;: &#34;447 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/integration/test_api_and_flows.py::TestApiProductos::test_get_api_categorias_distintas&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;447 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/integration/test_api_and_flows.py::TestApiProductos::test_categoria_inexistente_retorna_404&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/integration/test_api_and_flows.py::TestApiProductos::test_categoria_inexistente_retorna_404&#34;, &#34;duration&#34;: &#34;447 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/integration/test_api_and_flows.py::TestApiProductos::test_categoria_inexistente_retorna_404&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;447 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/integration/test_api_and_flows.py::TestApiProductos::test_api_productos_conversion_usd&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/integration/test_api_and_flows.py::TestApiProductos::test_api_productos_conversion_usd&#34;, &#34;duration&#34;: &#34;466 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/integration/test_api_and_flows.py::TestApiProductos::test_api_productos_conversion_usd&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;466 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/integration/test_api_and_flows.py::TestFlujoCarrito::test_agregar_producto_al_carrito_json&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/integration/test_api_and_flows.py::TestFlujoCarrito::test_agregar_producto_al_carrito_json&#34;, &#34;duration&#34;: &#34;626 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/integration/test_api_and_flows.py::TestFlujoCarrito::test_agregar_producto_al_carrito_json&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;626 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/integration/test_api_and_flows.py::TestFlujoCarrito::test_checkout_crea_pedido_pendiente&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/integration/test_api_and_flows.py::TestFlujoCarrito::test_checkout_crea_pedido_pendiente&#34;, &#34;duration&#34;: &#34;586 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/integration/test_api_and_flows.py::TestFlujoCarrito::test_checkout_crea_pedido_pendiente&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;586 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/integration/test_api_and_flows.py::TestVistasTienda::test_home_responde_200&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/integration/test_api_and_flows.py::TestVistasTienda::test_home_responde_200&#34;, &#34;duration&#34;: &#34;475 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/integration/test_api_and_flows.py::TestVistasTienda::test_home_responde_200&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;475 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/integration/test_api_and_flows.py::TestVistasTienda::test_productos_por_categoria_html&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/integration/test_api_and_flows.py::TestVistasTienda::test_productos_por_categoria_html&#34;, &#34;duration&#34;: &#34;00:00:01&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/integration/test_api_and_flows.py::TestVistasTienda::test_productos_por_categoria_html&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:01&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/integration/test_api_and_flows.py::TestVistasTienda::test_login_post_credenciales_validas&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/integration/test_api_and_flows.py::TestVistasTienda::test_login_post_credenciales_validas&#34;, &#34;duration&#34;: &#34;533 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/integration/test_api_and_flows.py::TestVistasTienda::test_login_post_credenciales_validas&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;533 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/load/test_carga_api.py::TestCarga::test_carga_50_peticiones_secuenciales_api&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/load/test_carga_api.py::TestCarga::test_carga_50_peticiones_secuenciales_api&#34;, &#34;duration&#34;: &#34;474 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/load/test_carga_api.py::TestCarga::test_carga_50_peticiones_secuenciales_api&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;474 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/load/test_carga_api.py::TestCarga::test_carga_endpoints_criticos&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/load/test_carga_api.py::TestCarga::test_carga_endpoints_criticos&#34;, &#34;duration&#34;: &#34;00:00:06&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/load/test_carga_api.py::TestCarga::test_carga_endpoints_criticos&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:06&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/stress/test_estres_api.py::TestEstres::test_estres_200_peticiones_api_productos&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/stress/test_estres_api.py::TestEstres::test_estres_200_peticiones_api_productos&#34;, &#34;duration&#34;: &#34;580 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/stress/test_estres_api.py::TestEstres::test_estres_200_peticiones_api_productos&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;580 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/stress/test_estres_api.py::TestEstres::test_estres_consultas_por_categoria&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/stress/test_estres_api.py::TestEstres::test_estres_consultas_por_categoria&#34;, &#34;duration&#34;: &#34;475 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/stress/test_estres_api.py::TestEstres::test_estres_consultas_por_categoria&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;475 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/unit/test_models_and_auth.py::TestProductoModel::test_to_dict_incluye_campos_requeridos&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/unit/test_models_and_auth.py::TestProductoModel::test_to_dict_incluye_campos_requeridos&#34;, &#34;duration&#34;: &#34;429 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/unit/test_models_and_auth.py::TestProductoModel::test_to_dict_incluye_campos_requeridos&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;429 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/unit/test_models_and_auth.py::TestAuthService::test_login_exitoso_con_usuario_seed&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/unit/test_models_and_auth.py::TestAuthService::test_login_exitoso_con_usuario_seed&#34;, &#34;duration&#34;: &#34;508 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/unit/test_models_and_auth.py::TestAuthService::test_login_exitoso_con_usuario_seed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;508 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/unit/test_models_and_auth.py::TestAuthService::test_login_falla_con_password_incorrecta&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/unit/test_models_and_auth.py::TestAuthService::test_login_falla_con_password_incorrecta&#34;, &#34;duration&#34;: &#34;536 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/unit/test_models_and_auth.py::TestAuthService::test_login_falla_con_password_incorrecta&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;536 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/unit/test_models_and_auth.py::TestAuthService::test_registro_rechaza_email_duplicado&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/unit/test_models_and_auth.py::TestAuthService::test_registro_rechaza_email_duplicado&#34;, &#34;duration&#34;: &#34;417 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/unit/test_models_and_auth.py::TestAuthService::test_registro_rechaza_email_duplicado&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;417 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/unit/test_models_and_auth.py::TestAuthService::test_registro_crea_usuario_y_carrito&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/unit/test_models_and_auth.py::TestAuthService::test_registro_crea_usuario_y_carrito&#34;, &#34;duration&#34;: &#34;518 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/unit/test_models_and_auth.py::TestAuthService::test_registro_crea_usuario_y_carrito&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;518 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/unit/test_services_mock.py::TestDivisaServiceMock::test_obtener_divisas_desde_api_externa&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/unit/test_services_mock.py::TestDivisaServiceMock::test_obtener_divisas_desde_api_externa&#34;, &#34;duration&#34;: &#34;432 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/unit/test_services_mock.py::TestDivisaServiceMock::test_obtener_divisas_desde_api_externa&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;432 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/unit/test_services_mock.py::TestDivisaServiceMock::test_obtener_divisas_usa_valores_por_defecto_si_falla_api&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/unit/test_services_mock.py::TestDivisaServiceMock::test_obtener_divisas_usa_valores_por_defecto_si_falla_api&#34;, &#34;duration&#34;: &#34;433 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/unit/test_services_mock.py::TestDivisaServiceMock::test_obtener_divisas_usa_valores_por_defecto_si_falla_api&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;433 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/unit/test_services_mock.py::TestPagoServiceMock::test_modo_simulado_sin_token_real&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/unit/test_services_mock.py::TestPagoServiceMock::test_modo_simulado_sin_token_real&#34;, &#34;duration&#34;: &#34;499 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/unit/test_services_mock.py::TestPagoServiceMock::test_modo_simulado_sin_token_real&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;499 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/unit/test_services_mock.py::TestPagoServiceMock::test_crear_preferencia_real_usa_sdk&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/unit/test_services_mock.py::TestPagoServiceMock::test_crear_preferencia_real_usa_sdk&#34;, &#34;duration&#34;: &#34;506 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/unit/test_services_mock.py::TestPagoServiceMock::test_crear_preferencia_real_usa_sdk&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;506 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}]}, &#34;renderCollapsed&#34;: [&#34;passed&#34;], &#34;initialSort&#34;: &#34;result&#34;, &#34;title&#34;: &#34;reporte_pruebas.html&#34;}"></div>
+    <script>
+      (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const { getCollapsedCategory, setCollapsedIds } = require('./storage.js')
+
+class DataManager {
+    setManager(data) {
+        const collapsedCategories = [...getCollapsedCategory(data.renderCollapsed)]
+        const collapsedIds = []
+        const tests = Object.values(data.tests).flat().map((test, index) => {
+            const collapsed = collapsedCategories.includes(test.result.toLowerCase())
+            const id = `test_${index}`
+            if (collapsed) {
+                collapsedIds.push(id)
+            }
+            return {
+                ...test,
+                id,
+                collapsed,
+            }
+        })
+        const dataBlob = { ...data, tests }
+        this.data = { ...dataBlob }
+        this.renderData = { ...dataBlob }
+        setCollapsedIds(collapsedIds)
+    }
+
+    get allData() {
+        return { ...this.data }
+    }
+
+    resetRender() {
+        this.renderData = { ...this.data }
+    }
+
+    setRender(data) {
+        this.renderData.tests = [...data]
+    }
+
+    toggleCollapsedItem(id) {
+        this.renderData.tests = this.renderData.tests.map((test) =>
+            test.id === id ? { ...test, collapsed: !test.collapsed } : test,
+        )
+    }
+
+    set allCollapsed(collapsed) {
+        this.renderData = { ...this.renderData, tests: [...this.renderData.tests.map((test) => (
+            { ...test, collapsed }
+        ))] }
+    }
+
+    get testSubset() {
+        return [...this.renderData.tests]
+    }
+
+    get environment() {
+        return this.renderData.environment
+    }
+
+    get initialSort() {
+        return this.data.initialSort
+    }
+}
+
+module.exports = {
+    manager: new DataManager(),
+}
+
+},{"./storage.js":8}],2:[function(require,module,exports){
+const mediaViewer = require('./mediaviewer.js')
+const templateEnvRow = document.getElementById('template_environment_row')
+const templateResult = document.getElementById('template_results-table__tbody')
+
+function htmlToElements(html) {
+    const temp = document.createElement('template')
+    temp.innerHTML = html
+    return temp.content.childNodes
+}
+
+const find = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return elem.querySelector(selector)
+}
+
+const findAll = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return [...elem.querySelectorAll(selector)]
+}
+
+const dom = {
+    getStaticRow: (key, value) => {
+        const envRow = templateEnvRow.content.cloneNode(true)
+        const isObj = typeof value === 'object' && value !== null
+        const values = isObj ? Object.keys(value).map((k) => `${k}: ${value[k]}`) : null
+
+        const valuesElement = htmlToElements(
+            values ? `<ul>${values.map((val) => `<li>${val}</li>`).join('')}<ul>` : `<div>${value}</div>`)[0]
+        const td = findAll('td', envRow)
+        td[0].textContent = key
+        td[1].appendChild(valuesElement)
+
+        return envRow
+    },
+    getResultTBody: ({ testId, id, log, extras, resultsTableRow, tableHtml, result, collapsed }) => {
+        const resultBody = templateResult.content.cloneNode(true)
+        resultBody.querySelector('tbody').classList.add(result.toLowerCase())
+        resultBody.querySelector('tbody').id = testId
+        resultBody.querySelector('.collapsible').dataset.id = id
+
+        resultsTableRow.forEach((html) => {
+            const t = document.createElement('template')
+            t.innerHTML = html
+            resultBody.querySelector('.collapsible').appendChild(t.content)
+        })
+
+        if (log) {
+            // Wrap lines starting with "E" with span.error to color those lines red
+            const wrappedLog = log.replace(/^E.*$/gm, (match) => `<span class="error">${match}</span>`)
+            resultBody.querySelector('.log').innerHTML = wrappedLog
+        } else {
+            resultBody.querySelector('.log').remove()
+        }
+
+        if (collapsed) {
+            resultBody.querySelector('.collapsible > .col-result')?.classList.add('collapsed')
+            resultBody.querySelector('.extras-row').classList.add('hidden')
+        } else {
+            resultBody.querySelector('.collapsible > .col-result')?.classList.remove('collapsed')
+        }
+
+        const media = []
+        extras?.forEach(({ name, format_type, content }) => {
+            if (['image', 'video'].includes(format_type)) {
+                media.push({ path: content, name, format_type })
+            }
+
+            if (format_type === 'html') {
+                resultBody.querySelector('.extraHTML').insertAdjacentHTML('beforeend', `<div>${content}</div>`)
+            }
+        })
+        mediaViewer.setup(resultBody, media)
+
+        // Add custom html from the pytest_html_results_table_html hook
+        tableHtml?.forEach((item) => {
+            resultBody.querySelector('td[class="extra"]').insertAdjacentHTML('beforeend', item)
+        })
+
+        return resultBody
+    },
+}
+
+module.exports = {
+    dom,
+    htmlToElements,
+    find,
+    findAll,
+}
+
+},{"./mediaviewer.js":6}],3:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const storageModule = require('./storage.js')
+
+const getFilteredSubSet = (filter) =>
+    manager.allData.tests.filter(({ result }) => filter.includes(result.toLowerCase()))
+
+const doInitFilter = () => {
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+}
+
+const doFilter = (type, show) => {
+    if (show) {
+        storageModule.showCategory(type)
+    } else {
+        storageModule.hideCategory(type)
+    }
+
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+
+    const sortColumn = storageModule.getSort()
+    doSort(sortColumn, true)
+}
+
+module.exports = {
+    doFilter,
+    doInitFilter,
+}
+
+},{"./datamanager.js":1,"./sort.js":7,"./storage.js":8}],4:[function(require,module,exports){
+const { redraw, bindEvents, renderStatic } = require('./main.js')
+const { doInitFilter } = require('./filter.js')
+const { doInitSort } = require('./sort.js')
+const { manager } = require('./datamanager.js')
+const data = JSON.parse(document.getElementById('data-container').dataset.jsonblob)
+
+function init() {
+    manager.setManager(data)
+    doInitFilter()
+    doInitSort()
+    renderStatic()
+    redraw()
+    bindEvents()
+}
+
+init()
+
+},{"./datamanager.js":1,"./filter.js":3,"./main.js":5,"./sort.js":7}],5:[function(require,module,exports){
+const { dom, find, findAll } = require('./dom.js')
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const { doFilter } = require('./filter.js')
+const {
+    getVisible,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    getSortDirection,
+    possibleFilters,
+} = require('./storage.js')
+
+const removeChildren = (node) => {
+    while (node.firstChild) {
+        node.removeChild(node.firstChild)
+    }
+}
+
+const renderStatic = () => {
+    const renderEnvironmentTable = () => {
+        const environment = manager.environment
+        const rows = Object.keys(environment).map((key) => dom.getStaticRow(key, environment[key]))
+        const table = document.getElementById('environment')
+        removeChildren(table)
+        rows.forEach((row) => table.appendChild(row))
+    }
+    renderEnvironmentTable()
+}
+
+const addItemToggleListener = (elem) => {
+    elem.addEventListener('click', ({ target }) => {
+        const id = target.parentElement.dataset.id
+        manager.toggleCollapsedItem(id)
+
+        const collapsedIds = getCollapsedIds()
+        if (collapsedIds.includes(id)) {
+            const updated = collapsedIds.filter((item) => item !== id)
+            setCollapsedIds(updated)
+        } else {
+            collapsedIds.push(id)
+            setCollapsedIds(collapsedIds)
+        }
+        redraw()
+    })
+}
+
+const renderContent = (tests) => {
+    const sortAttr = getSort(manager.initialSort)
+    const sortAsc = JSON.parse(getSortDirection())
+    const rows = tests.map(dom.getResultTBody)
+    const table = document.getElementById('results-table')
+    const tableHeader = document.getElementById('results-table-head')
+
+    const newTable = document.createElement('table')
+    newTable.id = 'results-table'
+
+    // remove all sorting classes and set the relevant
+    findAll('.sortable', tableHeader).forEach((elem) => elem.classList.remove('asc', 'desc'))
+    tableHeader.querySelector(`.sortable[data-column-type="${sortAttr}"]`)?.classList.add(sortAsc ? 'desc' : 'asc')
+    newTable.appendChild(tableHeader)
+
+    if (!rows.length) {
+        const emptyTable = document.getElementById('template_results-table__body--empty').content.cloneNode(true)
+        newTable.appendChild(emptyTable)
+    } else {
+        rows.forEach((row) => {
+            if (!!row) {
+                findAll('.collapsible td:not(.col-links', row).forEach(addItemToggleListener)
+                find('.logexpander', row).addEventListener('click',
+                    (evt) => evt.target.parentNode.classList.toggle('expanded'),
+                )
+                newTable.appendChild(row)
+            }
+        })
+    }
+
+    table.replaceWith(newTable)
+}
+
+const renderDerived = () => {
+    const currentFilter = getVisible()
+    possibleFilters.forEach((result) => {
+        const input = document.querySelector(`input[data-test-result="${result}"]`)
+        input.checked = currentFilter.includes(result)
+    })
+}
+
+const bindEvents = () => {
+    const filterColumn = (evt) => {
+        const { target: element } = evt
+        const { testResult } = element.dataset
+
+        doFilter(testResult, element.checked)
+        const collapsedIds = getCollapsedIds()
+        const updated = manager.renderData.tests.map((test) => {
+            return {
+                ...test,
+                collapsed: collapsedIds.includes(test.id),
+            }
+        })
+        manager.setRender(updated)
+        redraw()
+    }
+
+    const header = document.getElementById('environment-header')
+    header.addEventListener('click', () => {
+        const table = document.getElementById('environment')
+        table.classList.toggle('hidden')
+        header.classList.toggle('collapsed')
+    })
+
+    findAll('input[name="filter_checkbox"]').forEach((elem) => {
+        elem.addEventListener('click', filterColumn)
+    })
+
+    findAll('.sortable').forEach((elem) => {
+        elem.addEventListener('click', (evt) => {
+            const { target: element } = evt
+            const { columnType } = element.dataset
+            doSort(columnType)
+            redraw()
+        })
+    })
+
+    document.getElementById('show_all_details').addEventListener('click', () => {
+        manager.allCollapsed = false
+        setCollapsedIds([])
+        redraw()
+    })
+    document.getElementById('hide_all_details').addEventListener('click', () => {
+        manager.allCollapsed = true
+        const allIds = manager.renderData.tests.map((test) => test.id)
+        setCollapsedIds(allIds)
+        redraw()
+    })
+}
+
+const redraw = () => {
+    const { testSubset } = manager
+
+    renderContent(testSubset)
+    renderDerived()
+}
+
+module.exports = {
+    redraw,
+    bindEvents,
+    renderStatic,
+}
+
+},{"./datamanager.js":1,"./dom.js":2,"./filter.js":3,"./sort.js":7,"./storage.js":8}],6:[function(require,module,exports){
+class MediaViewer {
+    constructor(assets) {
+        this.assets = assets
+        this.index = 0
+    }
+
+    nextActive() {
+        this.index = this.index === this.assets.length - 1 ? 0 : this.index + 1
+        return [this.activeFile, this.index]
+    }
+
+    prevActive() {
+        this.index = this.index === 0 ? this.assets.length - 1 : this.index -1
+        return [this.activeFile, this.index]
+    }
+
+    get currentIndex() {
+        return this.index
+    }
+
+    get activeFile() {
+        return this.assets[this.index]
+    }
+}
+
+
+const setup = (resultBody, assets) => {
+    if (!assets.length) {
+        resultBody.querySelector('.media').classList.add('hidden')
+        return
+    }
+
+    const mediaViewer = new MediaViewer(assets)
+    const container = resultBody.querySelector('.media-container')
+    const leftArrow = resultBody.querySelector('.media-container__nav--left')
+    const rightArrow = resultBody.querySelector('.media-container__nav--right')
+    const mediaName = resultBody.querySelector('.media__name')
+    const counter = resultBody.querySelector('.media__counter')
+    const imageEl = resultBody.querySelector('img')
+    const sourceEl = resultBody.querySelector('source')
+    const videoEl = resultBody.querySelector('video')
+
+    const setImg = (media, index) => {
+        if (media?.format_type === 'image') {
+            imageEl.src = media.path
+
+            imageEl.classList.remove('hidden')
+            videoEl.classList.add('hidden')
+        } else if (media?.format_type === 'video') {
+            sourceEl.src = media.path
+
+            videoEl.classList.remove('hidden')
+            imageEl.classList.add('hidden')
+        }
+
+        mediaName.innerText = media?.name
+        counter.innerText = `${index + 1} / ${assets.length}`
+    }
+    setImg(mediaViewer.activeFile, mediaViewer.currentIndex)
+
+    const moveLeft = () => {
+        const [media, index] = mediaViewer.prevActive()
+        setImg(media, index)
+    }
+    const doRight = () => {
+        const [media, index] = mediaViewer.nextActive()
+        setImg(media, index)
+    }
+    const openImg = () => {
+        window.open(mediaViewer.activeFile.path, '_blank')
+    }
+    if (assets.length === 1) {
+        container.classList.add('media-container--fullscreen')
+    } else {
+        leftArrow.addEventListener('click', moveLeft)
+        rightArrow.addEventListener('click', doRight)
+    }
+    imageEl.addEventListener('click', openImg)
+}
+
+module.exports = {
+    setup,
+}
+
+},{}],7:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const storageModule = require('./storage.js')
+
+const genericSort = (list, key, ascending, customOrder) => {
+    let sorted
+    if (customOrder) {
+        sorted = list.sort((a, b) => {
+            const aValue = a.result.toLowerCase()
+            const bValue = b.result.toLowerCase()
+
+            const aIndex = customOrder.findIndex((item) => item.toLowerCase() === aValue)
+            const bIndex = customOrder.findIndex((item) => item.toLowerCase() === bValue)
+
+            // Compare the indices to determine the sort order
+            return aIndex - bIndex
+        })
+    } else {
+        sorted = list.sort((a, b) => a[key] === b[key] ? 0 : a[key] > b[key] ? 1 : -1)
+    }
+
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const durationSort = (list, ascending) => {
+    const parseDuration = (duration) => {
+        if (duration.includes(':')) {
+            // If it's in the format "HH:mm:ss"
+            const [hours, minutes, seconds] = duration.split(':').map(Number)
+            return (hours * 3600 + minutes * 60 + seconds) * 1000
+        } else {
+            // If it's in the format "nnn ms"
+            return parseInt(duration)
+        }
+    }
+    const sorted = list.sort((a, b) => parseDuration(a['duration']) - parseDuration(b['duration']))
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const doInitSort = () => {
+    const type = storageModule.getSort(manager.initialSort)
+    const ascending = storageModule.getSortDirection()
+    const list = manager.testSubset
+    const initialOrder = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed', 'Skipped', 'Passed']
+
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    if (type?.toLowerCase() === 'original') {
+        manager.setRender(list)
+    } else {
+        let sortedList
+        switch (type) {
+        case 'duration':
+            sortedList = durationSort(list, ascending)
+            break
+        case 'result':
+            sortedList = genericSort(list, type, ascending, initialOrder)
+            break
+        default:
+            sortedList = genericSort(list, type, ascending)
+            break
+        }
+        manager.setRender(sortedList)
+    }
+}
+
+const doSort = (type, skipDirection) => {
+    const newSortType = storageModule.getSort(manager.initialSort) !== type
+    const currentAsc = storageModule.getSortDirection()
+    let ascending
+    if (skipDirection) {
+        ascending = currentAsc
+    } else {
+        ascending = newSortType ? false : !currentAsc
+    }
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    const list = manager.testSubset
+    const sortedList = type === 'duration' ? durationSort(list, ascending) : genericSort(list, type, ascending)
+    manager.setRender(sortedList)
+}
+
+module.exports = {
+    doInitSort,
+    doSort,
+}
+
+},{"./datamanager.js":1,"./storage.js":8}],8:[function(require,module,exports){
+const possibleFilters = [
+    'passed',
+    'skipped',
+    'failed',
+    'error',
+    'xfailed',
+    'xpassed',
+    'rerun',
+]
+
+const getVisible = () => {
+    const url = new URL(window.location.href)
+    const settings = new URLSearchParams(url.search).get('visible')
+    const lower = (item) => {
+        const lowerItem = item.toLowerCase()
+        if (possibleFilters.includes(lowerItem)) {
+            return lowerItem
+        }
+        return null
+    }
+    return settings === null ?
+        possibleFilters :
+        [...new Set(settings?.split(',').map(lower).filter((item) => item))]
+}
+
+const hideCategory = (categoryToHide) => {
+    const url = new URL(window.location.href)
+    const visibleParams = new URLSearchParams(url.search).get('visible')
+    const currentVisible = visibleParams ? visibleParams.split(',') : [...possibleFilters]
+    const settings = [...new Set(currentVisible)].filter((f) => f !== categoryToHide).join(',')
+
+    url.searchParams.set('visible', settings)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const showCategory = (categoryToShow) => {
+    if (typeof window === 'undefined') {
+        return
+    }
+    const url = new URL(window.location.href)
+    const currentVisible = new URLSearchParams(url.search).get('visible')?.split(',').filter(Boolean) ||
+        [...possibleFilters]
+    const settings = [...new Set([categoryToShow, ...currentVisible])]
+    const noFilter = possibleFilters.length === settings.length || !settings.length
+
+    noFilter ? url.searchParams.delete('visible') : url.searchParams.set('visible', settings.join(','))
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getSort = (initialSort) => {
+    const url = new URL(window.location.href)
+    let sort = new URLSearchParams(url.search).get('sort')
+    if (!sort) {
+        sort = initialSort || 'result'
+    }
+    return sort
+}
+
+const setSort = (type) => {
+    const url = new URL(window.location.href)
+    url.searchParams.set('sort', type)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getCollapsedCategory = (renderCollapsed) => {
+    let categories
+    if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        const collapsedItems = new URLSearchParams(url.search).get('collapsed')
+        switch (true) {
+        case !renderCollapsed && collapsedItems === null:
+            categories = ['passed']
+            break
+        case collapsedItems?.length === 0 || /^["']{2}$/.test(collapsedItems):
+            categories = []
+            break
+        case /^all$/.test(collapsedItems) || collapsedItems === null && /^all$/.test(renderCollapsed):
+            categories = [...possibleFilters]
+            break
+        default:
+            categories = collapsedItems?.split(',').map((item) => item.toLowerCase()) || renderCollapsed
+            break
+        }
+    } else {
+        categories = []
+    }
+    return categories
+}
+
+const getSortDirection = () => JSON.parse(sessionStorage.getItem('sortAsc')) || false
+const setSortDirection = (ascending) => sessionStorage.setItem('sortAsc', ascending)
+
+const getCollapsedIds = () => JSON.parse(sessionStorage.getItem('collapsedIds')) || []
+const setCollapsedIds = (list) => sessionStorage.setItem('collapsedIds', JSON.stringify(list))
+
+module.exports = {
+    getVisible,
+    hideCategory,
+    showCategory,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    setSort,
+    getSortDirection,
+    setSortDirection,
+    getCollapsedCategory,
+    possibleFilters,
+}
+
+},{}]},{},[4]);
+    </script>
+  </footer>
+  </body>
+</html>

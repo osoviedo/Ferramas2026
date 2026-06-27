@@ -15,7 +15,10 @@ DESKTOP = Path(r"c:\Users\Jose\Desktop\test")
 DOCS = Path(r"c:\Users\Jose\Desktop\Ferramas2026-main\docs")
 
 PROJECT = "Ferramas"
-AUTHOR = "Fitzroyal"
+AUTHORS = "Jose Larenas / Oscar Oviedo"
+AUTHOR_1 = "Jose Larenas"
+AUTHOR_2 = "Oscar Oviedo"
+TEAM = "Equipo Ferramas (Jose Larenas, Oscar Oviedo)"
 DATE = "26/06/2026"
 DATE_ISO = "2026-06-26"
 ORG = "Duoc UC"
@@ -45,10 +48,10 @@ def build_integracion():
     hc["B3"] = ORG
     hc["C10"] = ORG
     hc["C11"] = PROJECT
-    hc["C13"] = AUTHOR
+    hc["C13"] = AUTHORS
     hc["F14"] = DATE
     hc["F21"] = DATE
-    hc["D21"] = AUTHOR
+    hc["D21"] = AUTHORS
 
     # Encabezado hoja pruebas
     ws["C2"] = PROJECT
@@ -150,9 +153,9 @@ def build_defectos():
     ws = wb["Registro Defectos"]
 
     ws["E4"] = PROJECT
-    ws["E5"] = AUTHOR
-    ws["E6"] = AUTHOR
-    ws["E7"] = "Equipo Ferramas"
+    ws["E5"] = AUTHOR_1
+    ws["E6"] = AUTHOR_2
+    ws["E7"] = TEAM
 
     # Limpiar ejemplos hotel
     for r in (10, 11):
@@ -272,7 +275,7 @@ def build_implantacion():
     # Actividades numeradas - buscar párrafos cortos de actividad y rellenar si vacíos
     activity_text = {
         "Contratación del Personal del Proyecto": (
-            "Equipo académico Duoc UC: desarrollador (Fitzroyal), soporte testing (equipo Ferramas)."
+            "Equipo académico Duoc UC: Jose Larenas (desarrollo) y Oscar Oviedo (integración MP y pruebas)."
         ),
         "Difusión de Propuesta en la Empresa": (
             "Presentación del prototipo Ferramas al docente y compañeros en evaluación presencial."

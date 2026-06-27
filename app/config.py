@@ -10,7 +10,7 @@ class Config:
     PUBLIC_BASE_URL = (
         os.environ.get('PUBLIC_BASE_URL')
         or os.environ.get('RENDER_EXTERNAL_URL')
-        or 'https://ferramas-20k3.onrender.com'
+        or 'http://127.0.0.1:5000'
     ).rstrip('/')
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-key-ferramas-2026')
     SQLALCHEMY_DATABASE_URI = os.environ.get(

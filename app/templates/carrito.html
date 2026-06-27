@@ -73,21 +73,38 @@ function renderCarrito() {
 function actualizarCantidad(id, nuevaCantidad) {
     let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     let item = carrito.find(p => p.id === id);
-    if (item) {
-        item.cantidad = Math.max(1, parseInt(nuevaCantidad) || 1);
-        localStorage.setItem("carrito", JSON.stringify(carrito));
-    }
+    if (!item) return;
+    const cantidadAnterior = item.cantidad;
+    const cantidadNueva = Math.max(1, parseInt(nuevaCantidad) || 1);
+    item.cantidad = cantidadNueva;
+    localStorage.setItem("carrito", JSON.stringify(carrito));
     renderCarrito();
 
     fetch("{{ url_for('carrito.actualizar') }}", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ producto_id: id, cantidad: Math.max(1, parseInt(nuevaCantidad) || 1) })
-    }).catch(() => {});
+        body: JSON.stringify({
+            producto_id: id,
+            cantidad: cantidadNueva,
+            cantidad_anterior: cantidadAnterior
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (!data.ok) {
+            item.cantidad = cantidadAnterior;
+            localStorage.setItem("carrito", JSON.stringify(carrito));
+            renderCarrito();
+            alert(data.error || "Stock insuficiente");
+        }
+    })
+    .catch(() => {});
 }
 
 function eliminarItem(id) {
     let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    let item = carrito.find(p => p.id === id);
+    const cantidad = item ? item.cantidad : 0;
     carrito = carrito.filter(p => p.id !== id);
     localStorage.setItem("carrito", JSON.stringify(carrito));
     renderCarrito();
@@ -95,7 +112,7 @@ function eliminarItem(id) {
     fetch("{{ url_for('carrito.eliminar') }}", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ producto_id: id })
+        body: JSON.stringify({ producto_id: id, cantidad: cantidad })
     }).catch(() => {});
 }
 

@@ -49,7 +49,9 @@ class TestApiProductos:
 
 @pytest.mark.integration
 class TestFlujoCarrito:
-    def test_agregar_producto_al_carrito_json(self, auth_client):
+    def test_agregar_producto_al_carrito_json(self, auth_client, app):
+        with app.app_context():
+            stock_inicial = Producto.query.get(1).stock
         r = auth_client.post(
             "/carrito/agregar",
             json={"producto_id": 1, "cantidad": 1},
@@ -58,6 +60,9 @@ class TestFlujoCarrito:
         data = r.get_json()
         assert data["ok"] is True
         assert data["nombre"] == "Martillo"
+        assert data["stock"] == stock_inicial - 1
+        with app.app_context():
+            assert Producto.query.get(1).stock == stock_inicial - 1
 
     def test_checkout_crea_pedido_pendiente(self, auth_client, app):
         auth_client.post("/carrito/agregar", json={"producto_id": 1, "cantidad": 2})

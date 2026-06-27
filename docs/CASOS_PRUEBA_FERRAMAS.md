@@ -1,6 +1,6 @@
 # Casos de prueba Ferramas — Guía para plantillas del curso
 
-Proyecto: **Ferramas** | Autor: Fitzroyal | Fecha: 26/06/2026
+Proyecto: **Ferramas** | Autores: Jose Larenas / Oscar Oviedo | Fecha: 26/06/2026
 
 Este documento complementa las plantillas de `Desktop/TEST/` con casos reales del proyecto.
 Los tests automatizados están en `tests/` y se ejecutan con `python -m pytest`.

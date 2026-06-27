@@ -21,8 +21,8 @@ REPLACEMENTS = {
     "[dd/mm/aaa]": "26/06/2026",
     "<aaaa-mm-dd>": "2026-06-26",
     "<1.1.0>": "1.0",
-    "<Nombre>": "Fitzroyal",
-    "[Nombre]": "Fitzroyal",
+    "<Nombre>": "Jose Larenas / Oscar Oviedo",
+    "[Nombre]": "Jose Larenas / Oscar Oviedo",
 }
 
 SECTION_INSERTS = {
@@ -370,7 +370,7 @@ def fill_revision_table(doc):
         if "Fecha" in cells_text and "Versión" in "".join(c.text for c in table.rows[0].cells):
             if len(table.rows) > 1:
                 row = table.rows[1]
-                vals = ["2026-06-26", "1.0", "Documento inicial Ferramas", "Fitzroyal"]
+                vals = ["2026-06-26", "1.0", "Documento inicial Ferramas", "Jose Larenas / Oscar Oviedo"]
                 for j, val in enumerate(vals):
                     if j < len(row.cells):
                         row.cells[j].paragraphs[0].clear()

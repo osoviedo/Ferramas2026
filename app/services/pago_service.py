@@ -69,8 +69,10 @@ class PagoService:
             'external_reference': str(pedido.id),
             'notification_url': notification_url,
             'back_urls': back_urls,
-            'auto_return': 'approved',
         }
+        success_url = back_urls.get('success', '')
+        if success_url.startswith('https://'):
+            preference_data['auto_return'] = 'approved'
         logger.info('MP back_urls.success=%s', back_urls.get('success'))
         try:
             preference_response = sdk.preference().create(preference_data)
@@ -124,7 +126,6 @@ class PagoService:
         """Confirma el pago: crea registro Pago, cambia estado pedido, DESCUENTA stock,
         vacía carrito."""
         from app.models.carrito import Carrito, CarritoProducto
-        from app.models.producto import Producto
 
         transaccion_id = transaccion_id or f'SIM-{pedido.id}-aprobado'
         pago = Pago.query.filter_by(pedido_id=pedido.id).first()
@@ -142,12 +143,7 @@ class PagoService:
 
         pedido.estado = 'aprobado'
 
-        # Descontar stock de cada producto del pedido
-        for pp in pedido.productos:
-            producto = Producto.query.get(pp.producto_id)
-            if producto:
-                producto.stock = max(0, producto.stock - pp.cantidad)
-
+        # El stock ya se descontó al agregar/actualizar el carrito vía API.
         carrito = Carrito.query.filter_by(usuario_id=pedido.usuario_id).first()
         if carrito:
             CarritoProducto.query.filter_by(carrito_id=carrito.id).delete()
