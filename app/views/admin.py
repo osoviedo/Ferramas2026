@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app import db
 from app.models.usuario import Usuario
@@ -42,7 +42,6 @@ def usuarios():
     if not admin_required():
         return redirect(url_for('tienda.index'))
     if request.method == 'POST':
-        from flask import request
         user_id = request.form.get('user_id')
         nuevo_rol = request.form.get('rol')
         user = Usuario.query.get_or_404(int(user_id))

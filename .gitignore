@@ -21,3 +21,6 @@ htmlcov/
 .vscode/
 *.swp
 *.swo
+
+# Herramientas locales (ngrok descargado)
+tools/

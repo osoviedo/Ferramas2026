@@ -12,7 +12,7 @@
         <p style="color:rgba(255,255,255,0.65); font-size:14px; margin-bottom:16px;">
             En la pantalla de Mercado Pago usa esta cuenta de comprador de prueba
             (no tu cuenta personal). También puedes pagar como invitado con tarjeta de prueba
-            <strong style="color:#fff;">APRO</strong>.
+            (titular <strong style="color:#fff;">APRO</strong>, CVV <strong style="color:#fff;">123</strong>).
         </p>
         <table style="color:rgba(255,255,255,0.85); font-size:14px; width:100%; margin-bottom:20px;">
             <tr>
@@ -27,6 +27,23 @@
         <a href="{{ init_point }}" class="btn btn-lg w-100" style="background:#e8601a; color:#fff; font-weight:500; border-radius:8px; padding:12px;">
             <i class="ti ti-external-link"></i> Continuar a Mercado Pago sandbox
         </a>
+
+        {% if local_dev %}
+        <div style="background:rgba(255,193,7,0.12); border:0.5px solid rgba(255,193,7,0.35); border-radius:10px; padding:14px 16px; margin-top:20px;">
+            <p style="color:rgba(255,255,255,0.85); font-size:13px; margin-bottom:12px;">
+                <i class="ti ti-alert-triangle"></i>
+                <strong>Desarrollo local:</strong> Mercado Pago no puede volver a <code>127.0.0.1</code>.
+                Si ves un error al terminar el pago, el cobro en sandbox puede haberse aprobado igual.
+            </p>
+            <a href="{{ url_confirmar }}" class="btn w-100" style="background:rgba(255,255,255,0.12); color:#fff; border:0.5px solid rgba(255,255,255,0.25); border-radius:8px; padding:10px;">
+                <i class="ti ti-check"></i> Ya pagué — confirmar pedido #{{ pedido_id }}
+            </a>
+            <p class="text-center mt-2 mb-0" style="color:rgba(255,255,255,0.45); font-size:11px;">
+                Para redirección automática usa ngrok y pon <code>PUBLIC_BASE_URL</code> con esa URL HTTPS.
+            </p>
+        </div>
+        {% endif %}
+
         <p class="text-center mt-3 mb-0" style="color:rgba(255,255,255,0.45); font-size:12px;">
             Modo demo activo — solo en desarrollo local
         </p>

@@ -89,6 +89,8 @@ def pago_iniciar(pedido_id):
             'pago_sandbox.html',
             init_point=init_point,
             pedido_id=pedido_id,
+            local_dev=result.get('local_dev', False),
+            url_confirmar=url_for('tienda.pago_exito', pedido_id=pedido_id),
         )
     return redirect(init_point)
 
@@ -124,6 +126,8 @@ def pago_exito():
         return render_template('checkout.html', error_pago=True)
 
     payment_data = PagoService.verificar_pago(payment_id) if payment_id else None
+    if not payment_data:
+        payment_data = PagoService.buscar_pago_aprobado(pedido.id)
     if payment_data:
         mp_status = (payment_data.get('status') or '').lower()
         external_ref = str(payment_data.get('external_reference') or '')
@@ -135,11 +139,16 @@ def pago_exito():
                 pedido_id=pedido_id,
                 payment_id=payment_data.get('id'),
             )
+        if mp_status in ('pending', 'in_process'):
+            return render_template(
+                'checkout.html',
+                pending_verificacion=True,
+                pedido_id=pedido_id,
+                payment_id=payment_data.get('id'),
+            )
 
-    # Si Mercado Pago informa aprobado, pero no logramos verificar inmediatamente
-    # (por ejemplo, porque el redirect no trae payment_id), dejamos el pedido pendiente
-    # y esperamos la confirmación via webhook.
-    if status == 'approved':
+    # Sin payment_id en el redirect (típico en localhost): consultar MP antes de cancelar.
+    if status == 'approved' or not payment_id:
         return render_template(
             'checkout.html',
             pending_verificacion=True,
@@ -179,6 +188,8 @@ def pago_error():
         return render_template('checkout.html', exito=True, pedido_id=pedido_id, payment_id=payment_id)
 
     payment_data = PagoService.verificar_pago(payment_id) if payment_id else None
+    if not payment_data:
+        payment_data = PagoService.buscar_pago_aprobado(pedido.id)
     if payment_data:
         mp_status = (payment_data.get('status') or '').lower()
         external_ref = str(payment_data.get('external_reference') or '')

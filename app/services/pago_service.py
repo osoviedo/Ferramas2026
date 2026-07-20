@@ -1,5 +1,6 @@
 import mercadopago
 from flask import current_app, url_for
+from urllib.parse import urlparse
 from app import db
 from app.models.pedido import Pago
 import logging
@@ -17,6 +18,14 @@ class PagoService:
         """True solo si NO hay credenciales reales configuradas."""
         token = current_app.config.get('MP_ACCESS_TOKEN', '')
         return (not token or token == PagoService._DEFAULT_TEST_TOKEN)
+
+    @staticmethod
+    def _es_url_local(base_url):
+        """True si la URL no es accesible públicamente (localhost)."""
+        if not base_url:
+            return True
+        host = (urlparse(base_url).hostname or '').lower()
+        return host in ('localhost', '127.0.0.1', '0.0.0.0', '::1')
 
     @staticmethod
     def _urls_retorno_mp(pedido_id):
@@ -57,23 +66,31 @@ class PagoService:
                 'quantity': pp.cantidad,
                 'unit_price': float(pp.precio_unitario),
             })
-        back_urls = PagoService._urls_retorno_mp(pedido.id)
         base = (current_app.config.get('PUBLIC_BASE_URL') or '').rstrip('/')
-        notification_url = (
-            f'{base}/api/webhook/mercadopago'
-            if base
-            else url_for('api.webhook_mercadopago', _external=True)
-        )
+        es_local = PagoService._es_url_local(base)
         preference_data = {
             'items': items,
             'external_reference': str(pedido.id),
-            'notification_url': notification_url,
-            'back_urls': back_urls,
         }
-        success_url = back_urls.get('success', '')
-        if success_url.startswith('https://'):
-            preference_data['auto_return'] = 'approved'
-        logger.info('MP back_urls.success=%s', back_urls.get('success'))
+        # MP rechaza localhost en back_urls y muestra congrats/recover/error al terminar.
+        if not es_local:
+            back_urls = PagoService._urls_retorno_mp(pedido.id)
+            preference_data['back_urls'] = back_urls
+            preference_data['notification_url'] = (
+                f'{base}/api/webhook/mercadopago'
+                if base
+                else url_for('api.webhook_mercadopago', _external=True)
+            )
+            if back_urls.get('success', '').startswith('https://'):
+                preference_data['auto_return'] = 'approved'
+            logger.info('MP back_urls.success=%s', back_urls.get('success'))
+        else:
+            logger.warning(
+                'PUBLIC_BASE_URL es local (%s): sin back_urls ni webhook. '
+                'Usa ngrok o confirma el pago desde /pago/exito?pedido_id=%s',
+                base or '(vacío)',
+                pedido.id,
+            )
         try:
             preference_response = sdk.preference().create(preference_data)
             preference = preference_response.get('response', {}) if isinstance(preference_response, dict) else {}
@@ -94,7 +111,7 @@ class PagoService:
                 )
                 return {'error': f'Mercado Pago no devolvió enlace de pago. {error_detail}'}
             logger.info(f"✓ Preferencia Mercado Pago creada para pedido {pedido.id}")
-            return {'init_point': init_point}
+            return {'init_point': init_point, 'local_dev': es_local}
         except Exception as e:
             logger.error(f"✗ Error al crear preferencia MP para pedido {pedido.id}: {str(e)}")
             return {'error': str(e)}
@@ -120,6 +137,29 @@ class PagoService:
         except Exception as e:
             logger.error(f"✗ Error verificando pago MP {payment_id}: {str(e)}")
             return None
+
+    @staticmethod
+    def buscar_pago_aprobado(pedido_id):
+        """Busca en MP un pago aprobado por external_reference (útil en localhost)."""
+        if PagoService._es_modo_simulado():
+            return None
+
+        try:
+            sdk = mercadopago.SDK(current_app.config.get('MP_ACCESS_TOKEN', ''))
+            search_response = sdk.payment().search(
+                filters={'external_reference': str(pedido_id)}
+            )
+            results = search_response.get('response', {}).get('results', [])
+            for payment in results:
+                if (payment.get('status') or '').lower() == 'approved':
+                    return payment
+        except Exception as e:
+            logger.error(
+                '✗ Error buscando pago MP para pedido %s: %s',
+                pedido_id,
+                str(e),
+            )
+        return None
 
     @staticmethod
     def confirmar_pago(pedido, transaccion_id=None):
